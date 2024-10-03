@@ -97,5 +97,26 @@ export default {
     if (user) {
       commit('SET_USER', user);
     }
+  },
+
+  forgotPassword: async (context, email) => {
+    try {
+      context.commit('SET_LOADING', true);
+      context.commit('SET_ERROR', null);
+      
+      const response = await axios.post('http://localhost:8000/user/v1/forgotPassword', { email });
+
+      return response.data;
+    } catch (error) {
+      if (error.response) {
+        throw new Error(error.response.data.message || 'Server error occurred');
+      } else if (error.request) {
+        throw new Error('No response received from server');
+      } else {
+        throw error;
+      }
+    } finally {
+      context.commit('SET_LOADING', false);
+    }
   }
 };

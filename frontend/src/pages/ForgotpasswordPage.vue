@@ -1,21 +1,69 @@
 <template>
   <div class="login-container">
-    <h2>Login</h2>
-    <form>
-      <input type="email" placeholder="Email" required />
+    <h2>Forgot Password</h2>
+    <form @submit.prevent="handleForgotPassword">
+      <input 
+        type="email" 
+        v-model="email" 
+        placeholder="Email" 
+        required 
+      />
       <p class="email-requirements">
         Enter the email to get the reset password link
       </p>
-      <button type="submit">Reset Password</button>
+      <button type="submit" :disabled="!email || loading">
+        {{ loading ? 'Sending...' : 'Reset Password' }}
+      </button>
     </form>
+    <p v-if="message" :class="['message', messageType]">
+      {{ message }}
+    </p>
+    <p v-if="error" class="error-message">
+      Error: {{ error }}
+    </p>
+    <div v-if="messageType === 'success'" class="signin-link">
+      <router-link to="/login">Sign In</router-link>
+    </div>
   </div>
 </template>
-    
-    
-<script>
-export default {};
-</script>
 
+<script>
+import { mapActions, mapState } from 'vuex';
+
+export default {
+  data() {
+    return {
+      email: '',
+      message: '',
+      messageType: '',
+      error: ''
+    };
+  },
+  computed: {
+    ...mapState('auth', ['loading'])
+  },
+  methods: {
+    ...mapActions('auth', ['forgotPassword']),
+    async handleForgotPassword() {
+      this.message = '';
+      this.error = '';
+      try {
+        const response = await this.forgotPassword(this.email);
+        if (response.status === 'Success') {
+          this.message = 'Reset password link sent to your email.';
+          this.messageType = 'Success';
+        } else {
+          this.message = 'An error occurred. Please try again.';
+          this.messageType = 'error';
+        }
+      } catch (error) {
+        this.error = error.response?.data?.message || 'An error occurred. Please check the console for more details.';
+        this.messageType = 'error';
+      }
+    }
+  }
+};
+</script>
 
 <style scoped>
 body {
@@ -61,9 +109,31 @@ button {
 button:hover {
   background-color: #0056b3;
 }
+button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
 .email-requirements {
   font-size: 0.8rem;
   color: #666;
   margin-top: 5px;
+}
+.message {
+  margin-top: 15px;
+  padding: 10px;
+  border-radius: 4px;
+  text-align: center;
+}
+.success {
+  background-color: #d4edda;
+  color: #155724;
+}
+.error {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+.signin-link {
+  margin-top: 15px;
+  text-align: center;
 }
 </style>
