@@ -118,5 +118,25 @@ export default {
     } finally {
       context.commit('SET_LOADING', false);
     }
+  },
+  resetPassword: async (context, { token, password }) => {
+    try {
+      context.commit('SET_LOADING', true);
+      context.commit('SET_ERROR', null);
+      
+      const response = await axios.post(`http://localhost:8000/user/v1/resetPassword/${token}`, { password });
+  
+      return response.data;
+    } catch (error) {
+      if (error.response) {
+        throw new Error(error.response.data.message || 'Server error occurred');
+      } else if (error.request) {
+        throw new Error('No response received from server');
+      } else {
+        throw error;
+      }
+    } finally {
+      context.commit('SET_LOADING', false);
+    }
   }
 };
