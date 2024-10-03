@@ -1,8 +1,9 @@
-const express = require("express");
-const { registerUser } = require("./userController.js");
+const express = require("express"); // Import express framework
+const { registerUser } = require("./userController.js"); // Import user registration controller
 
-const router = express.Router();
+const router = express.Router(); // Create a new router instance
 
-router.route("/user/v1/signup").post(registerUser);
+// Define route for user signup
+router.route("/user/v1/signup").post(registerUser); // Handle POST requests to signup endpoint
 
-module.exports = router;
+module.exports = router; // Export the router

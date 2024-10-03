@@ -1,23 +1,24 @@
-const { addOrUpdateUser } = require("./userService");
+const { addOrUpdateUser } = require("./userService"); // Import user service for adding or updating user
 
 module.exports.registerUser = async (req, res) => {
   try {
+    // Destructure required fields from request body
     const { first_name, last_name, email, country_code, phone_number, password, dob, role_name } = req.body;
 
-
-    // validating the request body
-    if ( !first_name || !email || !country_code || !phone_number || !password || !dob || !role_name) {
+    // Validate required fields
+    if (!first_name || !email || !country_code || !phone_number || !password || !dob || !role_name) {
       return res.status(400).json({
         status: "Failure",
         message: "Missing Required Fields!",
       });
     }
 
-    // Check if user exists and update or create new user
+    // Attempt to add or update user
     const { user, isNewUser, isNewRole } = await addOrUpdateUser({ 
       first_name, last_name, email, country_code, phone_number, password, dob 
     }, role_name);
 
+    // Respond based on user and role creation status
     if (isNewUser) {
       res.status(201).json({
         status: "success",
@@ -37,6 +38,7 @@ module.exports.registerUser = async (req, res) => {
       });
     }
   } catch (error) {
+    // Handle unexpected errors
     res.status(500).json({
       status: "Fail",
       message: error.message || "Sorry, Internal server error!",

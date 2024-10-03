@@ -1,12 +1,12 @@
-const express = require("express");
-const { loginUser, logoutUser , forgotPassword, resetPassword } = require("./authController.js");
+const express = require("express"); // Import express framework
+const { loginUser, logoutUser, forgotPassword, resetPassword } = require("./authController.js"); // Import controller functions
 
-const router = express.Router();
+const router = express.Router(); // Create a new router instance
 
-router.route("/user/v1/login").post(loginUser);
-router.route("/user/v1/logout").post(logoutUser);
-router.route('/user/v1/forgotPassword').post(forgotPassword);
-router.route('/user/v1/resetPassword/:token').post(resetPassword);
+// Define routes for user authentication
+router.route("/user/v1/login").post(loginUser); // Route for user login
+router.route("/user/v1/logout").post(logoutUser); // Route for user logout
+router.route('/user/v1/forgotPassword').post(forgotPassword); // Route for forgot password
+router.route('/user/v1/resetPassword/:token').post(resetPassword); // Route for resetting password with token
 
-
-module.exports = router;
+module.exports = router; // Export the router
