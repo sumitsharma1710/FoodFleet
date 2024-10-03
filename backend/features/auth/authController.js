@@ -88,7 +88,7 @@ module.exports.forgotPassword = async (req, res) => {
     const options = {
       to: email,
       subject: "Reset Password",
-      link: `http://localhost:8000/user/v1/resetPassword/${resetToken}`
+      link: `http://localhost:8080/user/v1/resetPassword/${resetToken}`
     }
     await sendMail(options)
     return res.status(200).json({
