@@ -6,7 +6,7 @@ module.exports.registerUser = async (req, res) => {
 
 
     // validating the request body
-    if ( !first_name || !last_name || !email || !country_code || !phone_number || !password || !dob || !role_name) {
+    if ( !first_name || !email || !country_code || !phone_number || !password || !dob || !role_name) {
       return res.status(400).json({
         status: "Failure",
         message: "Missing Required Fields!",
