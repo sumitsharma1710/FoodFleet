@@ -17,6 +17,13 @@
       <p v-if="!isPasswordValid && password" class="error-message">
         Invalid password
       </p>
+      <select v-model="roleType" required>
+        <option value="">Select Role</option>
+        <option value="Admin">Admin</option>
+        <option value="Customer">Customer</option>
+        <option value="Restaurant_Owner">Restaurant Owner</option>
+        <option value="Delivery_Partner">Delivery Partner</option>
+      </select>
 
       <button type="submit" :disabled="!isFormValid">Login</button>
     </form>
@@ -29,21 +36,26 @@
   </div>
 </template>
   
-  <script>
+<script>
+import { mapActions, mapState } from "vuex";
+
 export default {
   data() {
     return {
       email: "",
       password: "",
+      roleType: "",
       isPasswordValid: false,
     };
   },
   computed: {
+    ...mapState("auth", ["loading", "error"]),
     isFormValid() {
-      return this.isPasswordValid;
+      return this.email && this.isPasswordValid && this.roleType;
     },
   },
   methods: {
+    ...mapActions("auth", ["loginUser"]),
     validatePassword() {
       const { password } = this;
 
@@ -56,11 +68,22 @@ export default {
       this.isPasswordValid =
         minLength && hasUpperCase && hasLowerCase && hasNumbers && hasNonalphas;
     },
-    loginHandler() {
+    async loginHandler() {
       if (this.isFormValid) {
-        console.log("Form is valid. Logging in...");
-      } else {
-        console.log("Form is invalid. Please check all fields.");
+        try {
+          await this.loginUser({
+            email: this.email,
+            password: this.password,
+            role_name: this.roleType,
+          });
+
+          // Force a re-evaluation of the auth state
+          this.$store.dispatch("auth/loadUserFromStorage");
+
+          this.$router.push("/dashboard");
+        } catch (error) {
+          console.error("Login failed:", error);
+        }
       }
     },
   },
@@ -142,5 +165,12 @@ button:disabled {
   color: red;
   font-size: 0.9rem;
   margin-top: 5px;
+}
+select {
+  margin: 10px 0;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  width: 100%;
 }
 </style>

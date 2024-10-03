@@ -14,14 +14,14 @@ module.exports.loginUser = async (req, res) => {
 
     // Set cookies
     res.cookie("accessToken", accessToken, {
-      httpOnly: true,
-      sameSite: "Strict",
+      // httpOnly: true,
+      // sameSite: "Strict",
       maxAge: accessTokenExp,
     });
 
     res.cookie("refreshToken", refreshToken, {
-      httpOnly: true,
-      sameSite: "Strict",
+      // httpOnly: true,
+      // sameSite: "Strict",
       maxAge: refreshTokenExp
     });
 
@@ -30,9 +30,12 @@ module.exports.loginUser = async (req, res) => {
       message: "User Logged in successfully",
       data: {
         user: {
-          firstName: userDetails.firstName,
-          lastName: userDetails.lastName,
+          firstName: userDetails.first_name,
+          lastName: userDetails.last_name,
           email: userDetails.email,
+          accessToken,
+          refreshToken
+
         },
       },
     });

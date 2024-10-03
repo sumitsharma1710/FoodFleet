@@ -3,15 +3,42 @@
     <nav>
       <div class="logo"><router-link to="/">FoodFleet</router-link></div>
       <div class="nav-links">
-        <router-link to="/login">Login</router-link>
-        <router-link to="/signup">Signup</router-link>
+        <template v-if="isAuthenticated">
+          <span>Welcome, {{ userFullName }}</span>
+          <a href="#" @click.prevent="logout">Logout</a>
+        </template>
+        <template v-else>
+          <router-link to="/login">Login</router-link>
+          <router-link to="/signup">Signup</router-link>
+        </template>
       </div>
     </nav>
   </header>
 </template>
 
 <script>
-export default {};
+import { mapGetters, mapActions } from 'vuex';
+
+export default {
+  computed: {
+    ...mapGetters('auth', ['isAuthenticated', 'userFullName'])
+  },
+  methods: {
+    ...mapActions('auth', ['logoutUser']),
+    async logout() {
+      try {
+        await this.logoutUser();
+        this.$router.push('/login');
+      } catch (error) {
+        console.error('Logout failed:', error);
+      }
+    }
+  },
+  created() {
+    // Ensure user data is loaded when component is created
+    this.$store.dispatch('auth/loadUserFromStorage');
+  }
+};
 </script>
 
 <style scoped>
@@ -33,11 +60,11 @@ nav {
 }
 
 .logo a {
-    color: white;
-    text-decoration: none;
+  color: white;
+  text-decoration: none;
 }
 
-.nav-links a {
+.nav-links a, .nav-links span {
   color: white;
   text-decoration: none;
   margin-left: 20px;

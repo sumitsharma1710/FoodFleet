@@ -1,6 +1,7 @@
 <template>
   <div class="signup-container">
     <h2>Sign Up</h2>
+    <div v-if="error" class="error-message">{{ error }}</div>
     <form @submit.prevent="signupHandler">
       <label for="firstname">First Name*</label>
       <input type="text" id="firstname" v-model.trim="firstName" required />
@@ -11,9 +12,9 @@
       <label for="phone">Phone Number*</label>
       <div class="phone-input">
         <select id="country-code" v-model.trim="countryCode" required>
-          <option value="+1">+1 (USA)</option>
-          <option value="+44">+44 (UK)</option>
-          <option value="+91">+91 (India)</option>
+          <option value="+1">+1</option>
+          <option value="+44">+44</option>
+          <option value="+91">+91</option>
         </select>
         <input type="tel" id="phone" v-model.trim="phoneNumber" required />
       </div>
@@ -43,18 +44,21 @@
       <label for="user-role">Sign up as*</label>
       <select id="user-role" v-model="userRole" required>
         <option value="">Select a role</option>
-        <option value="admin">Admin</option>
-        <option value="customer">Customer</option>
-        <option value="restaurant_owner">Restaurant Owner</option>
-        <option value="delivery_partner">Delivery Partner</option>
+        <option value="Admin">Admin</option>
+        <option value="Customer">Customer</option>
+        <option value="Restaurant_Owner">Restaurant Owner</option>
+        <option value="Delivery_Partner">Delivery Partner</option>
       </select>
 
-      <button type="submit" :disabled="!isFormValid">Sign Up</button>
+      <button type="submit" :disabled="!isFormValid || loading">
+        {{ loading ? 'Signing up...' : 'Sign Up' }}
+      </button>
     </form>
   </div>
 </template>
-  
-  <script>
+
+<script>
+import { mapActions, mapState } from 'vuex';
 export default {
   data() {
     return {
@@ -70,6 +74,7 @@ export default {
     };
   },
   computed: {
+    ...mapState('auth', ['loading', 'error']),
     isFormValid() {
       return (
         this.firstName &&
@@ -83,6 +88,7 @@ export default {
     },
   },
   methods: {
+    ...mapActions('auth', ['registerUser']),
     validatePassword() {
       const { password } = this;
 
@@ -95,17 +101,35 @@ export default {
       this.isPasswordValid =
         minLength && hasUpperCase && hasLowerCase && hasNumbers && hasNonalphas;
     },
-    signupHandler() {
+    async signupHandler() {
       if (this.isFormValid) {
-        // Implement your signup logic here
-        console.log("Form is valid. Signing up...");
-      } else {
-        console.log("Form is invalid. Please check all fields.");
+        try {
+          const userData = {
+            first_name: this.firstName,
+            last_name: this.lastName,
+            email: this.email,
+            country_code: this.countryCode,
+            phone_number: this.phoneNumber,
+            password: this.password,
+            dob: this.dob,
+            role_name: this.userRole,
+          };
+          
+          const response = await this.registerUser(userData);
+          console.log('Registration successful:', response);
+          // Handle successful registration (e.g., redirect, show message)
+          this.$router.push('/login');
+          
+        } catch (error) {
+          console.error('Registration failed:', error);
+          // Handle registration error (e.g., show error message)
+        }
       }
     },
   },
 };
 </script>
+
 
 
 <style scoped>

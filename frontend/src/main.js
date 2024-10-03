@@ -11,6 +11,7 @@ const app = createApp(App)
 
 app.use(router)
 app.use(store)
+store.dispatch('auth/loadUserFromStorage');
 
 app.use(vuetify)
 app.mount('#app')
