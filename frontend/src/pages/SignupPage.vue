@@ -1,7 +1,12 @@
 <template>
+  <!-- Sign Up Form Container -->
   <div class="signup-container">
     <h2>Sign Up</h2>
+
+    <!-- Display error message if any -->
     <div v-if="error" class="error-message">{{ error }}</div>
+
+    <!-- Form to handle user signup -->
     <form @submit.prevent="signupHandler">
       <label for="firstname">First Name*</label>
       <input type="text" id="firstname" v-model.trim="firstName" required />
@@ -30,10 +35,12 @@
         required
         @input="validatePassword"
       />
+      <!-- Password requirements description -->
       <p class="password-requirements">
         Password must contain a lowercase letter, an uppercase letter, a number,
         a special character, and be at least 8 characters long.
       </p>
+      <!-- Show invalid password message -->
       <p v-if="!isPasswordValid && password" class="error-message">
         Invalid password
       </p>
@@ -50,15 +57,16 @@
         <option value="Delivery_Partner">Delivery Partner</option>
       </select>
 
+      <!-- Submit button -->
       <button type="submit" :disabled="!isFormValid || loading">
-        {{ loading ? 'Signing up...' : 'Sign Up' }}
+        {{ loading ? "Signing up..." : "Sign Up" }}
       </button>
     </form>
   </div>
 </template>
 
 <script>
-import { mapActions, mapState } from 'vuex';
+import { mapActions, mapState } from "vuex";
 export default {
   data() {
     return {
@@ -70,11 +78,12 @@ export default {
       password: "",
       dob: "",
       userRole: "",
-      isPasswordValid: false,
+      isPasswordValid: false, // Tracks password validation status
     };
   },
   computed: {
-    ...mapState('auth', ['loading', 'error']),
+    ...mapState("auth", ["loading", "error"]),
+    // Form validation check
     isFormValid() {
       return (
         this.firstName &&
@@ -88,10 +97,11 @@ export default {
     },
   },
   methods: {
-    ...mapActions('auth', ['registerUser']),
+    ...mapActions("auth", ["registerUser", "loginUser"]),
+    
+    // Validates password against specific criteria
     validatePassword() {
       const { password } = this;
-
       const minLength = password.length >= 8;
       const hasUpperCase = /[A-Z]/.test(password);
       const hasLowerCase = /[a-z]/.test(password);
@@ -101,6 +111,8 @@ export default {
       this.isPasswordValid =
         minLength && hasUpperCase && hasLowerCase && hasNumbers && hasNonalphas;
     },
+    
+    // Handles form submission
     async signupHandler() {
       if (this.isFormValid) {
         try {
@@ -114,23 +126,26 @@ export default {
             dob: this.dob,
             role_name: this.userRole,
           };
-          
-          const response = await this.registerUser(userData);
-          console.log('Registration successful:', response);
-          // Handle successful registration (e.g., redirect, show message)
-          this.$router.push('/login');
-          
+
+          // Register user and login automatically after successful signup
+          await this.registerUser(userData);
+          await this.loginUser({
+            email: this.email,
+            password: this.password,
+            role_name: this.userRole,
+          });
+
+          // Load user info and redirect to dashboard
+          await this.$store.dispatch("auth/loadUserFromStorage");
+          this.$router.push("/dashboard");
         } catch (error) {
-          console.error('Registration failed:', error);
-          // Handle registration error (e.g., show error message)
+          console.error("Registration failed:", error);
         }
       }
     },
   },
 };
 </script>
-
-
 
 <style scoped>
 body {
@@ -175,12 +190,6 @@ select {
   display: flex;
   gap: 10px;
 }
-.phone-input select {
-  width: 30%;
-}
-.phone-input input {
-  width: 70%;
-}
 button {
   background-color: #007bff;
   color: white;
@@ -194,20 +203,17 @@ button {
 button:hover {
   background-color: #0056b3;
 }
+button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
 .password-requirements {
   font-size: 0.8rem;
   color: #666;
-  margin-top: 5px;
 }
-
 .error-message {
   color: red;
   font-size: 0.9rem;
   margin-top: 5px;
-}
-
-button:disabled {
-  background-color: #cccccc;
-  cursor: not-allowed;
 }
 </style>

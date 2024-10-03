@@ -1,8 +1,12 @@
 <template>
   <div class="login-container">
+    <!-- Login form with email, password, role selection, and validation -->
     <h2>Login</h2>
     <form @submit.prevent="loginHandler">
+      <!-- Email input field -->
       <input type="email" v-model.trim="email" placeholder="Email" required />
+      
+      <!-- Password input field with validation on input -->
       <input
         type="password"
         v-model.trim="password"
@@ -10,13 +14,19 @@
         required
         @input="validatePassword"
       />
+
+      <!-- Password requirements hint -->
       <p class="password-requirements">
         Password must contain a lowercase letter, an uppercase letter, a number,
         a special character, and be at least 8 characters long.
       </p>
+
+      <!-- Error message for invalid password -->
       <p v-if="!isPasswordValid && password" class="error-message">
         Invalid password
       </p>
+
+      <!-- Role selection dropdown -->
       <select v-model="roleType" required>
         <option value="">Select Role</option>
         <option value="Admin">Admin</option>
@@ -25,37 +35,45 @@
         <option value="Delivery_Partner">Delivery Partner</option>
       </select>
 
+      <!-- Submit button, disabled if form is not valid -->
       <button type="submit" :disabled="!isFormValid">Login</button>
     </form>
+
+    <!-- Forgot password link -->
     <div class="forgot-password">
       <router-link to="/forgotPassword">Forgot Password?</router-link>
     </div>
+
+    <!-- Sign up link for new users -->
     <div class="new-user">
       <span>New User <router-link to="/signup">Sign Up</router-link></span>
     </div>
   </div>
 </template>
-  
+
 <script>
 import { mapActions, mapState } from "vuex";
 
 export default {
   data() {
     return {
-      email: "",
-      password: "",
-      roleType: "",
-      isPasswordValid: false,
+      email: "", // Holds email input
+      password: "", // Holds password input
+      roleType: "", // Holds selected role
+      isPasswordValid: false, // Tracks password validation status
     };
   },
   computed: {
     ...mapState("auth", ["loading", "error"]),
+    // Form validity based on email, password validation, and role selection
     isFormValid() {
       return this.email && this.isPasswordValid && this.roleType;
     },
   },
   methods: {
     ...mapActions("auth", ["loginUser"]),
+    
+    // Validate password based on set criteria
     validatePassword() {
       const { password } = this;
 
@@ -68,6 +86,8 @@ export default {
       this.isPasswordValid =
         minLength && hasUpperCase && hasLowerCase && hasNumbers && hasNonalphas;
     },
+
+    // Handles login submission with validation and Vuex login action
     async loginHandler() {
       if (this.isFormValid) {
         try {
@@ -77,9 +97,8 @@ export default {
             role_name: this.roleType,
           });
 
-          // Force a re-evaluation of the auth state
+          // Reloads user data from storage and redirects to dashboard
           this.$store.dispatch("auth/loadUserFromStorage");
-
           this.$router.push("/dashboard");
         } catch (error) {
           console.error("Login failed:", error);
@@ -89,8 +108,7 @@ export default {
   },
 };
 </script>
-  
-  <style scoped>
+<style scoped>
 body {
   font-family: Arial, sans-serif;
   display: flex;

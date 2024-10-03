@@ -1,12 +1,15 @@
 <template>
   <header>
     <nav>
+      <!-- Logo linking to the home page -->
       <div class="logo"><router-link to="/">FoodFleet</router-link></div>
       <div class="nav-links">
+        <!-- Show user's name and logout option if authenticated -->
         <template v-if="isAuthenticated">
           <span>Welcome, {{ userFullName }}</span>
           <a href="#" @click.prevent="logout">Logout</a>
         </template>
+        <!-- Show login/signup links if not authenticated -->
         <template v-else>
           <router-link to="/login">Login</router-link>
           <router-link to="/signup">Signup</router-link>
@@ -21,12 +24,15 @@ import { mapGetters, mapActions } from 'vuex';
 
 export default {
   computed: {
+    // Map authentication state and user's full name from the store
     ...mapGetters('auth', ['isAuthenticated', 'userFullName'])
   },
   methods: {
+    // Map the action to log out the user
     ...mapActions('auth', ['logoutUser']),
     async logout() {
       try {
+        // Attempt to log out the user and redirect to home page
         await this.logoutUser();
         this.$router.push('/');
       } catch (error) {
@@ -35,7 +41,7 @@ export default {
     }
   },
   created() {
-    // Ensure user data is loaded when component is created
+    // Load user data when the component is created
     this.$store.dispatch('auth/loadUserFromStorage');
   }
 };

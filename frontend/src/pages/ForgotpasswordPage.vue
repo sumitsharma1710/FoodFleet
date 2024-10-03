@@ -1,28 +1,34 @@
 <template>
   <div class="login-container">
     <h2>Forgot Password</h2>
+    <!-- Form to handle forgot password submission -->
     <form @submit.prevent="handleForgotPassword">
+      <!-- Input field for email -->
       <input 
         type="email" 
         v-model="email" 
         placeholder="Email" 
         required 
       />
+      <!-- Instructional message for the user -->
       <p class="email-requirements">
         Enter the email to get the reset password link
       </p>
+      <!-- Submit button, disabled if no email or loading -->
       <button type="submit" :disabled="!email || loading">
         {{ loading ? 'Sending...' : 'Reset Password' }}
       </button>
     </form>
+    <!-- Display message or error if present -->
     <p v-if="message" :class="['message', messageType]">
       {{ message }}
     </p>
     <p v-if="error" class="error-message">
       Error: {{ error }}
     </p>
+    <!-- Link to log in if password reset is successful -->
     <div v-if="messageType === 'success'" class="signin-link">
-      <router-link to="/login">Sign In</router-link>
+      <router-link to="/login">Log In</router-link>
     </div>
   </div>
 </template>
@@ -33,31 +39,35 @@ import { mapActions, mapState } from 'vuex';
 export default {
   data() {
     return {
-      email: '',
-      message: '',
-      messageType: '',
-      error: ''
+      email: '',        // User's email input
+      message: '',      // Success or error message
+      messageType: '',  // Type of message (success/error)
+      error: ''         // Error details
     };
   },
   computed: {
+    // Get 'loading' state from the auth Vuex module
     ...mapState('auth', ['loading'])
   },
   methods: {
+    // Map Vuex action for forgot password
     ...mapActions('auth', ['forgotPassword']),
+    
+    // Handle forgot password logic
     async handleForgotPassword() {
       this.message = '';
       this.error = '';
       try {
-        const response = await this.forgotPassword(this.email);
+        const response = await this.forgotPassword(this.email);  // Call forgotPassword action
         if (response.status === 'Success') {
-          this.message = 'Reset password link sent to your email.';
+          this.message = 'Reset password link sent to your email.';  // Success message
           this.messageType = 'Success';
         } else {
-          this.message = 'An error occurred. Please try again.';
+          this.message = 'An error occurred. Please try again.';     // General error message
           this.messageType = 'error';
         }
       } catch (error) {
-        this.error = error.response?.data?.message || 'An error occurred. Please check the console for more details.';
+        this.error = error.response?.data?.message || 'An error occurred. Please check the console for more details.';  // Catch errors
         this.messageType = 'error';
       }
     }
