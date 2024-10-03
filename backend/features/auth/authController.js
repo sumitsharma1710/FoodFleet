@@ -1,3 +1,4 @@
+const sendMail = require("../../utils/sendMail");
 const { loginUser, logoutUser, forgotPasswordService, resetPasswordService } = require("./authService");
 
 module.exports.loginUser = async (req, res) => {
@@ -84,6 +85,12 @@ module.exports.forgotPassword = async (req, res) => {
     
     // In a real application, you would send this token via email
     // For demonstration, we're returning it in the response
+    const options = {
+      to: email,
+      subject: "Reset Password",
+      link: `http://localhost:8000/user/v1/resetPassword/${resetToken}`
+    }
+    await sendMail(options)
     return res.status(200).json({
       status: "Success",
       message: "Password reset token sent to email",
