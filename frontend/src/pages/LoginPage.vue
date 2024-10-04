@@ -101,7 +101,7 @@ export default {
           this.$store.dispatch("auth/loadUserFromStorage");
           this.$router.push("/dashboard");
         } catch (error) {
-          console.error("Login failed:", error);
+          console.log("Login failed:", error);
         }
       }
     },
