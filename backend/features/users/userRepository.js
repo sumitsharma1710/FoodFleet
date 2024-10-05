@@ -13,6 +13,19 @@ module.exports.createUser = async (user) => {
 };
 
 // Function to find a user by email or phone number
+module.exports.findUserByEmailAndPhone = async (email, phone) => {
+  try {
+    const user = await User.findOne({
+      where: {
+        [Op.and]: [{ phone_number: phone }, { email: email }], // Query for matching phone or email
+      },
+    });
+    return user; // Return found user
+  } catch (error) {
+    throw error; // Rethrow error if query fails
+  }
+};
+
 module.exports.findUserByEmailOrPhone = async (email, phone) => {
   try {
     const user = await User.findOne({
