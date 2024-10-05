@@ -53,6 +53,7 @@
 
 <script>
 import { mapActions, mapState } from "vuex";
+import { toast } from 'vue3-toastify';
 
 export default {
   data() {
@@ -96,12 +97,20 @@ export default {
             password: this.password,
             role_name: this.roleType,
           });
-
           // Reloads user data from storage and redirects to dashboard
           this.$store.dispatch("auth/loadUserFromStorage");
+          setTimeout(() => {
+          toast.success("Logged in successfully", {
+          position: toast.POSITION.TOP_RIGHT,
+          autoClose: 1000
+        });
+        }, 0);
           this.$router.push("/dashboard");
         } catch (error) {
-          console.error("Login failed:", error);
+          toast.error(error.response?.data?.message || "Login failed", {
+            position: toast.POSITION.TOP_RIGHT,
+            autoClose: 3000
+          });
         }
       }
     },

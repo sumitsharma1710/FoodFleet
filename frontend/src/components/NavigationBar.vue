@@ -21,6 +21,7 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex';
+import { toast } from 'vue3-toastify';
 
 export default {
   computed: {
@@ -34,9 +35,24 @@ export default {
       try {
         // Attempt to log out the user and redirect to home page
         await this.logoutUser();
+
+        // add a toast here with set timeout of 3 sec. that user logout successfully then push to the below page 
+        
+
+        setTimeout(() => {
+          toast.success("Logged out successfully", {
+          position: toast.POSITION.TOP_RIGHT,
+          autoClose: 1000
+        });
+        }, 0);
         this.$router.push('/');
+
       } catch (error) {
-        console.error('Logout failed:', error);
+        // dont console handle error with the help of toast  and in toast show error message comming from backend
+        toast.error(error.message || "Logout failed. Please try again.", {
+          position: toast.POSITION.TOP_RIGHT,
+          autoClose: 5000
+        });
       }
     }
   },

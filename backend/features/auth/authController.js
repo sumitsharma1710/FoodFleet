@@ -35,7 +35,7 @@ module.exports.loginUser = async (req, res) => {
       },
     });
   } catch (error) {
-    res.status(500).json({
+    res.status(404).json({
       status: "Fail",
       message: error.message || "Sorry, Internal server error!", // Handle errors
     });

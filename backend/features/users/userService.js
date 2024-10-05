@@ -1,7 +1,8 @@
-const { createUser, findUserByEmailOrPhone } = require("./userRepository"); // Import user-related functions
+const { createUser, findUserByEmailOrPhone , findUserByEmailAndPhone } = require("./userRepository"); // Import user-related functions
 const { addUserRole, checkExistingUserRole } = require("./userRoleRepository"); // Import user role-related functions
 const validator = require("validator"); // Import validator library
 const validatePassword = require('../../utils/passwordValidator'); // Import password validation utility
+const validateNewUser = require('../../utils/newUser.js');
 
 // Function to add or update user details
 module.exports.addOrUpdateUser = async (userDetails, role_name) => {
@@ -15,8 +16,8 @@ module.exports.addOrUpdateUser = async (userDetails, role_name) => {
       throw new Error(validatePassword(userDetails.password));
     }
 
-    // Check if user already exists by email or phone
-    let user = await findUserByEmailOrPhone(userDetails.email, userDetails.phone_number);
+    // Check if user already exists by email and phone
+    let user = await findUserByEmailAndPhone(userDetails.email, userDetails.phone_number);
     let isNewUser = false; // Flag for new user status
     let isNewRole = false; // Flag for new role status
 
@@ -28,7 +29,14 @@ module.exports.addOrUpdateUser = async (userDetails, role_name) => {
       }
       isNewRole = true; // Existing user, but assigning a new role
     } else {
-      // Create a new user if none exists
+      // Create a new user 
+      // checking if any other with the given phone number or email address already exits 
+      let userCheck = await findUserByEmailOrPhone(userDetails.email, userDetails.phone_number);
+      // if user found wanted to display that which one (email or password) already exists 
+      if(userCheck){
+        await validateNewUser(userCheck, userDetails);
+      }
+      // if no user exists creating a new user
       user = await createUser(userDetails);
       isNewUser = true; // Set flag indicating a new user
       isNewRole = true; // Also a new role for the new user
@@ -43,16 +51,5 @@ module.exports.addOrUpdateUser = async (userDetails, role_name) => {
   } catch (error) {
     // Throw error if user registration process fails
     throw new Error(error.message || "Unable to process user registration at the moment");
-  }
-};
-
-// Function to find user by email or phone, returning null if not found
-module.exports.findUserByEmailOrPhone = async (email, phone) => {
-  try {
-    const user = await findUserByEmailOrPhone(email, phone); // Check for user by email or phone
-    return user; // Return found user
-  } catch (error) {
-    console.error("Error in findUserByEmailOrPhone:", error); // Log error for debugging
-    return null; // Return null instead of throwing an error
   }
 };

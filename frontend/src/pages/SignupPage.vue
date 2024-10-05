@@ -4,7 +4,7 @@
     <h2>Sign Up</h2>
 
     <!-- Display error message if any -->
-    <div v-if="error" class="error-message">{{ error }}</div>
+    <!-- <div v-if="error" class="error-message">{{ error }}</div> -->
 
     <!-- Form to handle user signup -->
     <form @submit.prevent="signupHandler">
@@ -67,6 +67,7 @@
 
 <script>
 import { mapActions, mapState } from "vuex";
+import { toast } from "vue3-toastify";
 export default {
   data() {
     return {
@@ -129,6 +130,10 @@ export default {
 
           // Register user and login automatically after successful signup
           await this.registerUser(userData);
+          toast.success('Signed up successfully, Thankyou!!',{
+            position: toast.POSITION.TOP_RIGHT,
+            autoClose: 1500
+          })
           await this.loginUser({
             email: this.email,
             password: this.password,
@@ -137,9 +142,12 @@ export default {
 
           // Load user info and redirect to dashboard
           await this.$store.dispatch("auth/loadUserFromStorage");
-          this.$router.push("/dashboard");
+          setTimeout(() => this.$router.push("/dashboard"), 3000);
         } catch (error) {
-          console.error("Registration failed:", error);
+          toast.success(error.response.data.message || "Error Occured",{
+            position: toast.POSITION.TOP_RIGHT,
+            autoClose: 3000
+          })
         }
       }
     },

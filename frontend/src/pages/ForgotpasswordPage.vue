@@ -19,15 +19,8 @@
         {{ loading ? 'Sending...' : 'Reset Password' }}
       </button>
     </form>
-    <!-- Display message or error if present -->
-    <p v-if="message" :class="['message', messageType]">
-      {{ message }}
-    </p>
-    <p v-if="error" class="error-message">
-      Error: {{ error }}
-    </p>
     <!-- Link to log in if password reset is successful -->
-    <div v-if="messageType === 'success'" class="signin-link">
+    <div v-if="resetSuccess" class="signin-link">
       <router-link to="/login">Log In</router-link>
     </div>
   </div>
@@ -35,14 +28,13 @@
 
 <script>
 import { mapActions, mapState } from 'vuex';
+import { toast } from 'vue3-toastify';
 
 export default {
   data() {
     return {
       email: '',        // User's email input
-      message: '',      // Success or error message
-      messageType: '',  // Type of message (success/error)
-      error: ''         // Error details
+      resetSuccess: false // Flag to show login link after successful reset
     };
   },
   computed: {
@@ -55,20 +47,25 @@ export default {
     
     // Handle forgot password logic
     async handleForgotPassword() {
-      this.message = '';
-      this.error = '';
       try {
         const response = await this.forgotPassword(this.email);  // Call forgotPassword action
         if (response.status === 'Success') {
-          this.message = 'Reset password link sent to your email.';  // Success message
-          this.messageType = 'Success';
+          toast.success('Reset password link sent to your email.', {
+            position: toast.POSITION.TOP_RIGHT,
+            autoClose: 3000
+          });
+          this.resetSuccess = true;
         } else {
-          this.message = 'An error occurred. Please try again.';     // General error message
-          this.messageType = 'error';
+          toast.error('An error occurred. Please try again.', {
+            position: toast.POSITION.TOP_RIGHT,
+            autoClose: 3000
+          });
         }
       } catch (error) {
-        this.error = error.response?.data?.message || 'An error occurred. Please check the console for more details.';  // Catch errors
-        this.messageType = 'error';
+        toast.error(error || 'An error occurred. Please try again.', {
+          position: toast.POSITION.TOP_RIGHT,
+          autoClose: 3000
+        });
       }
     }
   }

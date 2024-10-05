@@ -14,13 +14,18 @@ module.exports.loginUser = async (user) => {
     const userDetails = await findUser(user); // Find user by credentials
 
     if (!userDetails) {
-      throw new Error("User doesn't exist, Please sign up!"); // User not found
+      throw new Error("User doesn't exist with this email, Please sign up!"); // User not found
     }
     if (!(await userDetails.validatePassword(user.password))) {
       throw new Error("Incorrect password"); // Invalid password
     }
     
     const userRole = await getUserRole(userDetails.uuid, user.role_name); // Get user role
+
+    if (!userRole) {
+      throw new Error("User doesn't exist, With this role"); // User not found with this role
+    }
+
     const { accessToken, refreshToken, refreshTokenExpiresAt } = await userDetails.generateAuthToken(
       userRole.role_uuid // Generate auth tokens
     );

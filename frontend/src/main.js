@@ -1,17 +1,25 @@
-import { createApp } from 'vue' // Import Vue
-import App from './App.vue' // Main component
-import vuetify from './plugins/vuetify' // Vuetify plugin
-import { loadFonts } from './plugins/webfontloader' // Load fonts
-import router from './router' // App routing
-import store from './store/store' // Vuex store
+import { createApp } from "vue"; // Import Vue
+import App from "./App.vue"; // Main component
 
-loadFonts() // Load fonts
+import Vue3Toastify from "vue3-toastify";
+import "vue3-toastify/dist/index.css";
+import vuetify from "./plugins/vuetify"; // Vuetify plugin
+import { loadFonts } from "./plugins/webfontloader"; // Load fonts
+import router from "./router"; // App routing
+import store from "./store/store"; // Vuex store
 
-const app = createApp(App) // Create app
+loadFonts(); // Load fonts
 
-app.use(router) // Add router
-app.use(store) // Add store
-store.dispatch('auth/loadUserFromStorage') // Load user data
+const app = createApp(App); // Create app
 
-app.use(vuetify) // Add Vuetify
-app.mount('#app') // Mount app
+app.use(router); // Add router
+app.use(store); // Add store
+store.dispatch("auth/loadUserFromStorage"); // Load user data
+
+app.use(Vue3Toastify, {
+  autoClose: 3000,
+  // Add other options here if needed
+});
+
+app.use(vuetify); // Add Vuetify
+app.mount("#app"); // Mount app
