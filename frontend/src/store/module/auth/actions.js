@@ -20,7 +20,7 @@ export default {
       };
       
       // Make POST request to register user
-      const response = await axios.post('http://localhost:8000/user/v1/signup', postData);
+      const response = await axios.post('http://192.1.200.39:8000/user/v1/signup', postData);
       
       if (response.data.user) {
         context.commit('SET_USER', response.data.user); // Set user data in the store
@@ -43,7 +43,7 @@ export default {
       context.commit('SET_ERROR', null); // Clear previous errors
       
       // Make POST request to log in user
-      const response = await axios.post('http://localhost:8000/user/v1/login', {
+      const response = await axios.post('http://192.1.200.39:8000/user/v1/login', {
         email: payload.email,
         password: payload.password,
         role_name: payload.role_name
@@ -82,7 +82,7 @@ export default {
       context.commit('SET_LOADING', true); // Set loading state
       
       // Make POST request to log out user
-      await axios.post('http://localhost:8000/user/v1/logout', {}, {
+      await axios.post('http://192.1.200.39:8000/user/v1/logout', {}, {
         withCredentials: true // Include cookies for session management
       });
       
@@ -112,7 +112,7 @@ export default {
       context.commit('SET_ERROR', null); // Clear previous errors
       
       // Make POST request to request password reset
-      const response = await axios.post('http://localhost:8000/user/v1/forgotPassword', { email });
+      const response = await axios.post('http://192.1.200.39:8000/user/v1/forgotPassword', { email });
 
       return response.data; // Return response data
     } catch (error) {
@@ -135,7 +135,7 @@ export default {
       context.commit('SET_ERROR', null); // Clear previous errors
       
       // Make POST request to reset password
-      const response = await axios.post(`http://localhost:8000/user/v1/resetPassword/${token}`, { password });
+      const response = await axios.post(`http://192.1.200.39:8000/user/v1/resetPassword/${token}`, { password });
   
       return response.data; // Return response data
     } catch (error) {
