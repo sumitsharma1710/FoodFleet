@@ -46,7 +46,16 @@
       </p>
 
       <label for="dob">Date of Birth*</label>
-      <input type="date" id="dob" v-model.trim="dob" required />
+      <input
+        type="date"
+        id="dob"
+        v-model.trim="dob"
+        @blur="validateAge"
+        required
+      />
+      <p v-if="dobValidationMessage" class="error-message">
+        {{ dobValidationMessage }}
+      </p>
 
       <label for="user-role">Sign up as*</label>
       <select id="user-role" v-model="userRole" required>
@@ -80,6 +89,7 @@ export default {
       dob: "",
       userRole: "",
       isPasswordValid: false, // Tracks password validation status
+      dobValidationMessage: "", // Tracks Dob validation status
     };
   },
   computed: {
@@ -93,13 +103,14 @@ export default {
         this.email &&
         this.isPasswordValid &&
         this.dob &&
-        this.userRole
+        this.userRole &&
+        !this.dobValidationMessage 
       );
     },
   },
   methods: {
     ...mapActions("auth", ["registerUser", "loginUser"]),
-    
+
     // Validates password against specific criteria
     validatePassword() {
       const { password } = this;
@@ -112,7 +123,37 @@ export default {
       this.isPasswordValid =
         minLength && hasUpperCase && hasLowerCase && hasNumbers && hasNonalphas;
     },
-    
+
+    // Validates age against specific criteria
+
+    validateAge() {
+      if (this.dob) {
+        const age = this.calculateAge(this.dob);
+        if (age < 16) {
+          this.dobValidationMessage =
+            "You must be at least 16 years old to sign up.";
+        } else {
+          this.dobValidationMessage = "";
+        }
+      } else {
+        this.dobValidationMessage = "";
+      }
+    },
+
+    calculateAge(birthDate) {
+      const today = new Date();
+      const birth = new Date(birthDate);
+      let age = today.getFullYear() - birth.getFullYear();
+      const monthDiff = today.getMonth() - birth.getMonth();
+      if (
+        monthDiff < 0 ||
+        (monthDiff === 0 && today.getDate() < birth.getDate())
+      ) {
+        age--;
+      }
+      return age;
+    },
+
     // Handles form submission
     async signupHandler() {
       if (this.isFormValid) {
@@ -130,10 +171,10 @@ export default {
 
           // Register user and login automatically after successful signup
           await this.registerUser(userData);
-          toast.success('Signed up successfully, Thankyou!!',{
+          toast.success("Signed up successfully, Thankyou!!", {
             position: toast.POSITION.TOP_RIGHT,
-            autoClose: 1500
-          })
+            autoClose: 1500,
+          });
           await this.loginUser({
             email: this.email,
             password: this.password,
@@ -144,10 +185,10 @@ export default {
           await this.$store.dispatch("auth/loadUserFromStorage");
           setTimeout(() => this.$router.push("/dashboard"), 3000);
         } catch (error) {
-          toast.success(error.response.data.message || "Error Occured",{
+          toast.success(error.response.data.message || "Error Occured", {
             position: toast.POSITION.TOP_RIGHT,
-            autoClose: 3000
-          })
+            autoClose: 3000,
+          });
         }
       }
     },
