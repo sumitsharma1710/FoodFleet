@@ -1,7 +1,7 @@
 import actions from "./actions";
 import mutations from "./mutations";
 import getters from "./getters";
-import Cookies from "js-cookie";
+// import Cookies from "js-cookie";
 
 export default {
   namespaced: true,
@@ -10,8 +10,8 @@ export default {
       user: JSON.parse(localStorage.getItem('user')) || null,
       loading: false,
       error: null,
-      accesstoken: Cookies.get('accessToken') || null,
-      refreshtoken: Cookies.get('refreshToken') || null
+      // accesstoken: Cookies.get('accessToken') || null,
+      // refreshtoken: Cookies.get('refreshToken') || null
     };
   },
   mutations,

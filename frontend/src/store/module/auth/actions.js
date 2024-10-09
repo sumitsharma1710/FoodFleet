@@ -59,12 +59,12 @@ export default {
         email: userData.email
       }); // Commit user data to store
       
-      if (response.data.data.accessToken) {
-        context.commit('SET_ACCESSTOKEN', response.data.data.accessToken); // Commit access token
-      }
-      if (response.data.data.refreshToken) {
-        context.commit('SET_REFRESHTOKEN', response.data.data.refreshToken); // Commit refresh token
-      }
+      // if (response.data.data.accessToken) {
+      //   context.commit('SET_ACCESSTOKEN', response.data.data.accessToken); // Commit access token
+      // }
+      // if (response.data.data.refreshToken) {
+      //   context.commit('SET_REFRESHTOKEN', response.data.data.refreshToken); // Commit refresh token
+      // }
       
       return response.data; // Return response data
     } catch (error) {
@@ -82,9 +82,11 @@ export default {
       context.commit('SET_LOADING', true); // Set loading state
       
       // Make POST request to log out user
-      await axios.post('http://192.1.200.39:8000/user/v1/logout', {}, {
+      const res = await axios.post('http://192.1.200.39:8000/user/v1/logout', {}, {
         withCredentials: true // Include cookies for session management
       });
+
+      console.log(res);
       
       context.commit('CLEAR_USER_DATA'); // Clear user data from store
       

@@ -1,4 +1,4 @@
-import Cookies from "js-cookie"; // Import Cookies library for cookie management
+// import Cookies from "js-cookie"; // Import Cookies library for cookie management
 
 export default {
   // Set user data in state and localStorage
@@ -22,24 +22,24 @@ export default {
   },
 
   // Set access token and manage cookies
-  SET_ACCESSTOKEN(state, accesstoken) {
-    state.accesstoken = accesstoken; // Update access token in state
-    if (accesstoken) {
-      Cookies.set('accessToken', accesstoken); // Save access token in cookies
-    } else {
-      Cookies.remove('accessToken'); // Remove access token cookie if null
-    }
-  },
+  // SET_ACCESSTOKEN(state, accesstoken) {
+  //   state.accesstoken = accesstoken; // Update access token in state
+  //   if (accesstoken) {
+  //     Cookies.set('accessToken', accesstoken); // Save access token in cookies
+  //   } else {
+  //     Cookies.remove('accessToken'); // Remove access token cookie if null
+  //   }
+  // },
 
   // Set refresh token and manage cookies
-  SET_REFRESHTOKEN(state, refreshtoken) {
-    state.refreshtoken = refreshtoken; // Update refresh token in state
-    if (refreshtoken) {
-      Cookies.set('refreshToken', refreshtoken); // Save refresh token in cookies
-    } else {
-      Cookies.remove('refreshToken'); // Remove refresh token cookie if null
-    }
-  },
+  // SET_REFRESHTOKEN(state, refreshtoken) {
+  //   state.refreshtoken = refreshtoken; // Update refresh token in state
+  //   if (refreshtoken) {
+  //     Cookies.set('refreshToken', refreshtoken); // Save refresh token in cookies
+  //   } else {
+  //     Cookies.remove('refreshToken'); // Remove refresh token cookie if null
+  //   }
+  // },
 
   // Clear all user-related data from state and storage
   CLEAR_USER_DATA(state) {
@@ -48,7 +48,7 @@ export default {
     state.refreshtoken = null; // Clear refresh token
     state.error = null; // Clear error message
     localStorage.removeItem('user'); // Remove user from localStorage
-    Cookies.remove('accessToken'); // Remove access token cookie
-    Cookies.remove('refreshToken'); // Remove refresh token cookie
+    // Cookies.remove('accessToken'); // Remove access token cookie
+    // Cookies.remove('refreshToken'); // Remove refresh token cookie
   }
 };

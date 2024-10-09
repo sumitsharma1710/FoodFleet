@@ -13,11 +13,17 @@ module.exports.loginUser = async (req, res) => {
 
     // Set access token cookie
     res.cookie("accessToken", accessToken, {
+      httpOnly: true,
+      // secure: true,
+      // sameSite: "None",
       maxAge: accessTokenExp, // Cookie expiration
     });
 
     // Set refresh token cookie
     res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      // secure: true,  
+      // sameSite: "None",
       maxAge: refreshTokenExp // Cookie expiration
     });
 
@@ -46,7 +52,7 @@ module.exports.loginUser = async (req, res) => {
 module.exports.logoutUser = async (req, res) => {
   try {
     const refreshToken = req.cookies.refreshToken; // Get refresh token from cookies
-    
+
     if (!refreshToken) {
       return res.status(400).json({
         status: "Fail",
@@ -57,8 +63,16 @@ module.exports.logoutUser = async (req, res) => {
     await logoutUser(refreshToken); // Logout user
 
     // Clear cookies
-    res.clearCookie("accessToken");
-    res.clearCookie("refreshToken");
+    res.clearCookie("accessToken", {
+      httpOnly: true,
+      // secure: true,  
+      // sameSite: "None"
+    });
+    res.clearCookie("refreshToken", {
+      httpOnly: true,
+      // secure: true,  
+      // sameSite: "None"
+    });
 
     return res.status(200).json({
       status: "Success",

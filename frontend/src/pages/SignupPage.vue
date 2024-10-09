@@ -183,7 +183,7 @@ export default {
 
           // Load user info and redirect to dashboard
           await this.$store.dispatch("auth/loadUserFromStorage");
-          setTimeout(() => this.$router.push("/dashboard"), 3000);
+          setTimeout(() => this.$router.replace("/dashboard"), 3000);
         } catch (error) {
           toast.success(error.response.data.message || "Error Occured", {
             position: toast.POSITION.TOP_RIGHT,

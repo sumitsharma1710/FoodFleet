@@ -12,19 +12,19 @@
         v-model.trim="password"
         placeholder="Password"
         required
-        @input="validatePassword"
+
       />
 
-      <!-- Password requirements hint -->
+      <!-- Password requirements hint
       <p class="password-requirements">
         Password must contain a lowercase letter, an uppercase letter, a number,
         a special character, and be at least 8 characters long.
-      </p>
+      </p> -->
 
       <!-- Error message for invalid password -->
-      <p v-if="!isPasswordValid && password" class="error-message">
+      <!-- <p v-if="!isPasswordValid && password" class="error-message">
         Invalid password
-      </p>
+      </p> -->
 
       <!-- Role selection dropdown -->
       <select v-model="roleType" required>
@@ -61,32 +61,32 @@ export default {
       email: "", // Holds email input
       password: "", // Holds password input
       roleType: "", // Holds selected role
-      isPasswordValid: false, // Tracks password validation status
+      // isPasswordValid: false, // Tracks password validation status
     };
   },
   computed: {
     ...mapState("auth", ["loading", "error"]),
     // Form validity based on email, password validation, and role selection
     isFormValid() {
-      return this.email && this.isPasswordValid && this.roleType;
+      return this.email && this.roleType;
     },
   },
   methods: {
     ...mapActions("auth", ["loginUser"]),
     
     // Validate password based on set criteria
-    validatePassword() {
-      const { password } = this;
+    // validatePassword() {
+    //   const { password } = this;
 
-      const minLength = password.length >= 8;
-      const hasUpperCase = /[A-Z]/.test(password);
-      const hasLowerCase = /[a-z]/.test(password);
-      const hasNumbers = /\d/.test(password);
-      const hasNonalphas = /\W/.test(password);
+    //   const minLength = password.length >= 8;
+    //   const hasUpperCase = /[A-Z]/.test(password);
+    //   const hasLowerCase = /[a-z]/.test(password);
+    //   const hasNumbers = /\d/.test(password);
+    //   const hasNonalphas = /\W/.test(password);
 
-      this.isPasswordValid =
-        minLength && hasUpperCase && hasLowerCase && hasNumbers && hasNonalphas;
-    },
+    //   this.isPasswordValid =
+    //     minLength && hasUpperCase && hasLowerCase && hasNumbers && hasNonalphas;
+    // },
 
     // Handles login submission with validation and Vuex login action
     async loginHandler() {
@@ -105,7 +105,7 @@ export default {
           autoClose: 1000
         });
         }, 0);
-          this.$router.push("/dashboard");
+          this.$router.replace("/dashboard");
         } catch (error) {
           toast.error(error.response?.data?.message || "Login failed", {
             position: toast.POSITION.TOP_RIGHT,

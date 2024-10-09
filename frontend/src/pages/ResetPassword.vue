@@ -75,7 +75,7 @@ export default {
           this.message =
             "Password reset successfully. You can now log in with your new password.";
           this.messageType = "success";
-          setTimeout(() => this.$router.push("/login"), 3000);
+          setTimeout(() => this.$router.replace("/login"), 3000);
         } else {
           // Handle failure
           this.message = "An error occurred. Please try again.";

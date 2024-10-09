@@ -45,3 +45,14 @@ module.exports.registerUser = async (req, res) => {
     });
   }
 };
+
+
+module.exports.getUser = async (req, res) => {
+  try{
+    const refreshToken = req.cookies.refreshToken;
+
+  }catch(err){
+
+  }
+   
+};

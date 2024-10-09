@@ -1,6 +1,8 @@
+// import Cookies from "js-cookie";
+
 export default {
   // Check if a user is authenticated
-  isAuthenticated: state => !!state.user, // Return true if user exists
+  isAuthenticated: (state) => !!state.user,
 
   // Get the full name of the user
   userFullName: state => {
