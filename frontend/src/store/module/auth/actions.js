@@ -115,15 +115,13 @@ export default {
       context.commit("SET_LOADING", true); // Set loading state
 
       // Make POST request to log out user
-      const res = await axios.post(
+      await axios.post(
         "http://localhost:8000/user/v1/logout",
         {},
         {
           withCredentials: true, // Include cookies for session management
         }
       );
-
-      console.log(res);
 
       context.commit("CLEAR_USER_DATA"); // Clear user data from store
 
@@ -152,7 +150,6 @@ export default {
           withCredentials: true,
         }
       );
-      console.log(response);
       const user = response.data.data.user;
       if (user) {
         commit("SET_USER", user);
