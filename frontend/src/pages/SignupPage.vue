@@ -268,7 +268,7 @@ button:disabled {
 }
 .password-requirements {
   font-size: 0.8rem;
-  ccolor: #555;
+  color: #555;
 }
 .error-message {
   color: red;
