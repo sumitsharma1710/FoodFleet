@@ -12,7 +12,7 @@ const app = express();
 // Using middleware cors to accept requests from the frontend
 app.use(cors({
   credentials: true, // Allow credentials (like cookies) to be sent
-  origin: "http://192.1.200.39:8080" // Specify the frontend origin
+  origin: "http://localhost:8080" // Specify the frontend origin
 }));
 
 // Using cookieParser middleware to parse cookies from requests

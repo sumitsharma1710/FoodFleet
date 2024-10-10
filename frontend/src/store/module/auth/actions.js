@@ -42,7 +42,7 @@ export default {
 
       // Make POST request to register user
       const response = await axios.post(
-        "http://192.1.200.39:8000/user/v1/signup",
+        "http://localhost:8000/user/v1/signup",
         postData
       );
 
@@ -72,7 +72,7 @@ export default {
 
       // Make POST request to log in user
       const response = await axios.post(
-        "http://192.1.200.39:8000/user/v1/login",
+        "http://localhost:8000/user/v1/login",
         {
           email: payload.email,
           password: encryptedPassword,
@@ -116,7 +116,7 @@ export default {
 
       // Make POST request to log out user
       const res = await axios.post(
-        "http://192.1.200.39:8000/user/v1/logout",
+        "http://localhost:8000/user/v1/logout",
         {},
         {
           withCredentials: true, // Include cookies for session management
@@ -147,7 +147,7 @@ export default {
 
     try {
       const response = await axios.get(
-        "http://192.1.200.39:8000/user/v1/user/details",
+        "http://localhost:8000/user/v1/user/details",
         {
           withCredentials: true,
         }
@@ -174,7 +174,7 @@ export default {
 
       // Make POST request to request password reset
       const response = await axios.post(
-        "http://192.1.200.39:8000/user/v1/forgotPassword",
+        "http://localhost:8000/user/v1/forgotPassword",
         { email }
       );
 
@@ -200,7 +200,7 @@ export default {
 
       // Make POST request to reset password
       const response = await axios.post(
-        `http://192.1.200.39:8000/user/v1/resetPassword/${token}`,
+        `http://localhost:8000/user/v1/resetPassword/${token}`,
         { password }
       );
 
