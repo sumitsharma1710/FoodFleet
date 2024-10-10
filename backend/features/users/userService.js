@@ -1,4 +1,5 @@
-const { createUser, findUserByEmailOrPhone , findUserByEmailAndPhone } = require("./userRepository"); // Import user-related functions
+const jwt = require('jsonwebtoken');
+const { createUser, findUserByEmailOrPhone , findUserByEmailAndPhone , fetchUser} = require("./userRepository"); // Import user-related functions
 const { addUserRole, checkExistingUserRole } = require("./userRoleRepository"); // Import user role-related functions
 const validator = require("validator"); // Import validator library
 const validatePassword = require('../../utils/passwordValidator'); // Import password validation utility
@@ -53,3 +54,26 @@ module.exports.addOrUpdateUser = async (userDetails, role_name) => {
     throw new Error(error.message || "Unable to process user registration at the moment");
   }
 };
+
+
+
+module.exports.getUserDetails = async (token)=>{
+  try{
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    if(!decoded && !decoded.uuid){
+      throw new Error("Unable to fetch user details");
+    }
+    else{
+      const user = await fetchUser(decoded.uuid);
+      if(!user){
+        throw new Error("user not found");
+      }
+      return user
+    }
+
+  }catch(error){
+    throw new Error(error.message || "User not found");
+
+  }
+}

@@ -1,12 +1,20 @@
 const sendMail = require("../../utils/sendMail"); // Import mail sending utility
 const { loginUser, logoutUser, forgotPasswordService, resetPasswordService } = require("./authService"); // Import authentication services
+const decryptPassword = require('../../utils/decryptPassword'); 
+
 
 // Handle user login
 module.exports.loginUser = async (req, res) => {
   try {
     const { email, password, role_name } = req.body; // Destructure request body
-    // Authenticate user and retrieve tokens
-    const { userDetails, accessToken, refreshToken } = await loginUser({ email, password, role_name });
+
+    const privateKeyPem = process.env.PRIVATE_KEY_PEM; // Load your private key PEM from environment variables
+
+    // Decrypt the password using the utility
+    const decryptedPassword = decryptPassword(password, privateKeyPem);
+
+    // Now use decryptedPassword in the login service
+    const { userDetails, accessToken, refreshToken } = await loginUser({ email, password: decryptedPassword, role_name });
 
     const accessTokenExp = parseInt(process.env.ACCESS_TOKEN_EXP); // Access token expiration time
     const refreshTokenExp = parseInt(process.env.REFRESH_TOKEN_EXP); // Refresh token expiration time

@@ -33,5 +33,6 @@ app.get("/", (req, res) => {
 // Starting the server and listening on a specified port
 app.listen(process.env.PORT || 8010, (req, res) => {
   checkConnection(); // Checking the database connection
+  // console.log(process.env.PUBLIC_KEY_PEM);
   console.log('App is running on port: ' + (process.env.PORT || 8010)); // Logging the running port
 });

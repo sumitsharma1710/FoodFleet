@@ -38,3 +38,17 @@ module.exports.findUserByEmailOrPhone = async (email, phone) => {
     throw error; // Rethrow error if query fails
   }
 };
+
+
+module.exports.fetchUser = async(userUuid)=>{
+  try {
+    const user = await User.findOne({
+      where: {
+        uuid : userUuid
+      }
+    });
+    return user; // Return found user
+  } catch (error) {
+    throw error; // Rethrow error if query fails
+  }
+}
