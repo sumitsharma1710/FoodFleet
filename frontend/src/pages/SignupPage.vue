@@ -34,9 +34,11 @@
         v-model.trim="password"
         required
         @input="validatePassword"
+        @focus="passwordFocused = true"
+        @blur="handlePasswordBlur"
       />
       <!-- Password requirements description -->
-      <p class="password-requirements">
+      <p class="password-requirements" v-if="showPasswordRequirements">
         Password must contain a lowercase letter, an uppercase letter, a number,
         a special character, and be at least 8 characters long.
       </p>
@@ -90,6 +92,7 @@ export default {
       userRole: "",
       isPasswordValid: false, // Tracks password validation status
       dobValidationMessage: "", // Tracks Dob validation status
+      passwordFocused: false,
     };
   },
   computed: {
@@ -104,8 +107,11 @@ export default {
         this.isPasswordValid &&
         this.dob &&
         this.userRole &&
-        !this.dobValidationMessage 
+        !this.dobValidationMessage
       );
+    },
+    showPasswordRequirements() {
+      return this.passwordFocused || (this.password && !this.isPasswordValid);
     },
   },
   methods: {
@@ -153,6 +159,10 @@ export default {
       }
       return age;
     },
+    handlePasswordBlur() {
+      this.passwordFocused = false;
+      this.validatePassword();
+    },
 
     // Handles form submission
     async signupHandler() {
@@ -182,7 +192,7 @@ export default {
           });
 
           // Load user info and redirect to dashboard
-          await this.$store.dispatch("auth/loadUserFromStorage");
+          await this.$store.dispatch("auth/loadUserFromDB");
           setTimeout(() => this.$router.replace("/dashboard"), 3000);
         } catch (error) {
           toast.success(error.response.data.message || "Error Occured", {
@@ -258,7 +268,7 @@ button:disabled {
 }
 .password-requirements {
   font-size: 0.8rem;
-  color: #666;
+  ccolor: #555;
 }
 .error-message {
   color: red;

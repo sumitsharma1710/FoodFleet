@@ -55,10 +55,6 @@ export default {
         });
       }
     }
-  },
-  created() {
-    // Load user data when the component is created
-    this.$store.dispatch('auth/loadUserFromStorage');
   }
 };
 </script>

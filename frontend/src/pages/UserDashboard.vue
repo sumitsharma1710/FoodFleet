@@ -6,20 +6,16 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex';
+import { mapGetters } from 'vuex';
 
 export default {
   computed: {
     // Maps the getter for the user's full name from the 'auth' store
     ...mapGetters('auth', ['userFullName'])
-  },
-  methods: {
-    // Maps the action to load the user data from storage
-    ...mapActions('auth', ['loadUserFromStorage'])
-  },
-  created() {
-    // Load user data from storage when the component is created
-    this.loadUserFromStorage();
   }
+  // methods: {
+  //   // Maps the action to load the user data from storage
+  //   ...mapActions('auth', ['loadUserFromDB'])
+  // }
 }
 </script>

@@ -98,7 +98,7 @@ export default {
             role_name: this.roleType,
           });
           // Reloads user data from storage and redirects to dashboard
-          this.$store.dispatch("auth/loadUserFromStorage");
+          this.$store.dispatch("auth/loadUserFromDB");
           setTimeout(() => {
           toast.success("Logged in successfully", {
           position: toast.POSITION.TOP_RIGHT,

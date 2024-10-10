@@ -11,10 +11,9 @@ import store from "./store/store"; // Vuex store
 loadFonts(); // Load fonts
 
 const app = createApp(App); // Create app
-
 app.use(router); // Add router
 app.use(store); // Add store
-store.dispatch("auth/loadUserFromStorage"); // Load user data
+
 
 app.use(Vue3Toastify, {
   autoClose: 3000,
@@ -22,4 +21,8 @@ app.use(Vue3Toastify, {
 });
 
 app.use(vuetify); // Add Vuetify
+
+// store.dispatch("auth/loadUserFromDB").finally(() => {
+//   app.mount("#app");
+// });
 app.mount("#app"); // Mount app
