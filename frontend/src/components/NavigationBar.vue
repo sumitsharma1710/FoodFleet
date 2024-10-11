@@ -45,7 +45,7 @@ export default {
           autoClose: 1000
         });
         }, 0);
-        this.$router.push('/');
+        this.$router.replace('/');
 
       } catch (error) {
         // dont console handle error with the help of toast  and in toast show error message comming from backend

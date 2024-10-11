@@ -1,19 +1,25 @@
+const jwt = require("jsonwebtoken");
 
-const jwt = require('jsonwebtoken');
+const { db } = require("../models/dbConnection");
 
-const authMiddleware = (req, res, next) => {
-  const token = req.header('Authorization')?.replace('Bearer ', '');
+const User = db.User;
 
-  if (!token) {
-    return res.status(401).json({ message: 'No token, authorization denied' });
+const authMiddleware = async (req, res, next) => {
+  const { refreshToken } = req.cookies;
+
+  if (!refreshToken) {
+    return res.status(401).json({ message: "No token, authorization denied" });
   }
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded;
+    const decoded = jwt.verify(refreshToken, process.env.JWT_SECRET);
+
+    const user = await User.findByPk(decoded.uuid);
+
+    req.user = user;
     next();
   } catch (error) {
-    res.status(401).json({ message: 'Token is not valid' });
+    res.status(401).json({ message: "Token is not valid" });
   }
 };
 

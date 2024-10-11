@@ -42,7 +42,7 @@ export default {
 
       // Make POST request to register user
       const response = await axios.post(
-        "http://192.1.200.39:8000/user/v1/signup",
+        "http://localhost:8000/user/v1/signup",
         postData
       );
 
@@ -72,7 +72,7 @@ export default {
 
       // Make POST request to log in user
       const response = await axios.post(
-        "http://192.1.200.39:8000/user/v1/login",
+        "http://localhost:8000/user/v1/login",
         {
           email: payload.email,
           password: encryptedPassword,
@@ -115,15 +115,15 @@ export default {
       context.commit("SET_LOADING", true); // Set loading state
 
       // Make POST request to log out user
-      const res = await axios.post(
-        "http://192.1.200.39:8000/user/v1/logout",
+      await axios.post(
+        "http://localhost:8000/user/v1/logout",
         {},
         {
           withCredentials: true, // Include cookies for session management
         }
       );
 
-      console.log(res);
+      // console.log(res);
 
       context.commit("CLEAR_USER_DATA"); // Clear user data from store
 
@@ -147,12 +147,12 @@ export default {
 
     try {
       const response = await axios.get(
-        "http://192.1.200.39:8000/user/v1/user/details",
+        "http://localhost:8000/user/v1/user/details",
         {
           withCredentials: true,
         }
       );
-      console.log(response);
+      // console.log(response);
       const user = response.data.data.user;
       if (user) {
         commit("SET_USER", user);
@@ -174,7 +174,7 @@ export default {
 
       // Make POST request to request password reset
       const response = await axios.post(
-        "http://192.1.200.39:8000/user/v1/forgotPassword",
+        "http://localhost:8000/user/v1/forgotPassword",
         { email }
       );
 
@@ -200,7 +200,7 @@ export default {
 
       // Make POST request to reset password
       const response = await axios.post(
-        `http://192.1.200.39:8000/user/v1/resetPassword/${token}`,
+        `http://localhost:8000/user/v1/resetPassword/${token}`,
         { password }
       );
 

@@ -4,6 +4,7 @@ const { addUserRole, checkExistingUserRole } = require("./userRoleRepository"); 
 const validator = require("validator"); // Import validator library
 const validatePassword = require('../../utils/passwordValidator'); // Import password validation utility
 const validateNewUser = require('../../utils/newUser.js');
+const CustomError = require('../../utils/customErrorHandling')
 
 // Function to add or update user details
 module.exports.addOrUpdateUser = async (userDetails, role_name) => {
@@ -51,11 +52,9 @@ module.exports.addOrUpdateUser = async (userDetails, role_name) => {
     return { user, isNewUser, isNewRole }; // Return user and status flags
   } catch (error) {
     // Throw error if user registration process fails
-    throw new Error(error.message || "Unable to process user registration at the moment");
+    throw new CustomError(error.message || "DB Error : Server Side error", 500)
   }
 };
-
-
 
 module.exports.getUserDetails = async (token)=>{
   try{
@@ -73,7 +72,6 @@ module.exports.getUserDetails = async (token)=>{
     }
 
   }catch(error){
-    throw new Error(error.message || "User not found");
-
+    throw new CustomError(error.message || "DB Error : Server Side error", 500)
   }
 }

@@ -2,9 +2,11 @@ const sendMail = require("../../utils/sendMail"); // Import mail sending utility
 const { loginUser, logoutUser, forgotPasswordService, resetPasswordService } = require("./authService"); // Import authentication services
 const decryptPassword = require('../../utils/decryptPassword'); 
 
+const asyncErrorHandler = require('../../utils/asyncErrorHandling')
+
 
 // Handle user login
-module.exports.loginUser = async (req, res) => {
+module.exports.loginUser = asyncErrorHandler(async (req, res) => {
   try {
     const { email, password, role_name } = req.body; // Destructure request body
 
@@ -54,10 +56,10 @@ module.exports.loginUser = async (req, res) => {
       message: error.message || "Sorry, Internal server error!", // Handle errors
     });
   }
-};
+});
 
 // Handle user logout
-module.exports.logoutUser = async (req, res) => {
+module.exports.logoutUser = asyncErrorHandler(async (req, res) => {
   try {
     const refreshToken = req.cookies.refreshToken; // Get refresh token from cookies
 
@@ -92,10 +94,10 @@ module.exports.logoutUser = async (req, res) => {
       message: error.message || "Sorry, Internal server error!", // Handle errors
     });
   }
-};
+});
 
 // Handle forgot password request
-module.exports.forgotPassword = async (req, res) => {
+module.exports.forgotPassword = asyncErrorHandler(async (req, res) => {
   try {
     const { email } = req.body; // Get email from request body
     const resetToken = await forgotPasswordService(email); // Generate reset token
@@ -104,7 +106,7 @@ module.exports.forgotPassword = async (req, res) => {
     const options = {
       to: email,
       subject: "Reset Password",
-      link: `http://192.1.200.39:8080/user/v1/resetPassword/${resetToken}` // Reset link
+      link: `http://localhost:8080/user/v1/resetPassword/${resetToken}` // Reset link
     };
     await sendMail(options); // Send reset email
     return res.status(200).json({
@@ -118,10 +120,10 @@ module.exports.forgotPassword = async (req, res) => {
       message: error.message || "Sorry, Internal server error!", // Handle errors
     });
   }
-};
+});
 
 // Handle password reset
-module.exports.resetPassword = async (req, res) => {
+module.exports.resetPassword = asyncErrorHandler(async (req, res) => {
   try {
     const { token } = req.params; // Get token from URL parameters
     const { password } = req.body; // Get new password from request body
@@ -138,4 +140,4 @@ module.exports.resetPassword = async (req, res) => {
       message: error.message || "Sorry, Internal server error!", // Handle errors
     });
   }
-};
+});

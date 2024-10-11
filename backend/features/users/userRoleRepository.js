@@ -1,9 +1,11 @@
 const { db } = require("../../models/dbConnection"); // Import database connection
 const { UserRole, Role } = db; // Get UserRole and Role models from the database
+const CustomError = require('../../utils/customErrorHandling')
+
 
 // Function to add a role to a user
 module.exports.addUserRole = async (userUuid, role_name) => {
-  try {
+  // try {
     // Find the role by its name
     const role = await Role.findOne({
       where: {
@@ -14,7 +16,8 @@ module.exports.addUserRole = async (userUuid, role_name) => {
 
     // Throw error if role does not exist
     if (!role) {
-      throw new Error(`Role with name ${role_name} not found`);
+      // next( new CustomError(error.message || `Role with name ${role_name} not found`, 500)); // Handle errors
+      throw new CustomError(error.message || `Role with name ${role_name} not found`, 500); // Handle errors
     }
 
     // Create a new UserRole entry
@@ -23,14 +26,15 @@ module.exports.addUserRole = async (userUuid, role_name) => {
       role_uuid: role.uuid // Associate the role UUID
     });
     return userRole; // Return the newly created user role
-  } catch (error) {
-    throw error; // Rethrow error if any operation fails
-  }
+  // } catch (error) {
+  //   // next( new CustomError(error.message || "DB Error : Unable to create User", 500)); // Handle errors
+  //   throw new CustomError(error.message || "DB Error : Unable to create User", 500); // Handle errors
+  // }
 };
 
 // Function to check if a user already has a specific role
 module.exports.checkExistingUserRole = async (userUuid, role_name) => {
-  try {
+  // try {
     // Find the role by its name
     const role = await Role.findOne({
       where: {
@@ -41,7 +45,8 @@ module.exports.checkExistingUserRole = async (userUuid, role_name) => {
 
     // Throw error if role does not exist
     if (!role) {
-      throw new Error(`Role with name ${role_name} not found`);
+      // next( new CustomError(error.message || `DB Error : Role with name ${role_name} not found`, 500)); // Handle errors
+      throw new CustomError(error.message || `DB Error : Role with name ${role_name} not found`, 500); // Handle errors
     }
 
     // Check if the user already has this role
@@ -52,7 +57,8 @@ module.exports.checkExistingUserRole = async (userUuid, role_name) => {
       }
     });
     return existingRole; // Return the existing role if found
-  } catch (error) {
-    throw error; // Rethrow error if any operation fails
-  }
+  // } catch (error) {
+  //   // next( new CustomError(error.message || `DB Error : unable to fetch user Role`, 500)); // Handle errors
+  //   throw new CustomError(error.message || `DB Error : unable to fetch user Role`, 500); // Handle errors
+  // }
 };

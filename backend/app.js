@@ -5,6 +5,8 @@ const cors = require('cors');
 const { checkConnection } = require("./models/dbConnection"); 
 const userApi = require("./features/users/userApi"); 
 const authApi = require("./features/auth/authApi"); 
+const globalErrorHandler = require('./utils/globalErrorHandling');
+const CustomError = require('./utils/customErrorHandling');
 
 // Creating an instance of the Express application
 const app = express();
@@ -12,7 +14,7 @@ const app = express();
 // Using middleware cors to accept requests from the frontend
 app.use(cors({
   credentials: true, // Allow credentials (like cookies) to be sent
-  origin: "http://192.1.200.39:8080" // Specify the frontend origin
+  origin: "http://localhost:8080" // Specify the frontend origin
 }));
 
 // Using cookieParser middleware to parse cookies from requests
@@ -21,13 +23,19 @@ app.use(cookieParser());
 // Middleware to parse JSON request bodies
 app.use(express.json());
 
+// Middleware for globally handling errors
+app.use(globalErrorHandler);
+
 // Registering API routes
 app.use(userApi);
 app.use(authApi);
 
-// Setting up a basic route for the root URL
 app.get("/", (req, res) => {
   res.send("Working on user authentication"); 
+});
+
+app.all("*", (req, res, next) => {
+  next(new CustomError(`Can't find the ${req.url} on the server!`, 404));
 });
 
 // Starting the server and listening on a specified port
