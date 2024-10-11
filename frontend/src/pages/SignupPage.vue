@@ -195,7 +195,7 @@ export default {
           await this.$store.dispatch("auth/loadUserFromDB");
           setTimeout(() => this.$router.replace("/dashboard"), 3000);
         } catch (error) {
-          toast.success(error.response.data.message || "Error Occured", {
+          toast.error(error.response.data.message || "Error Occured", {
             position: toast.POSITION.TOP_RIGHT,
             autoClose: 3000,
           });
