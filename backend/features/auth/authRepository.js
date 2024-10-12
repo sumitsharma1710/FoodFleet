@@ -1,6 +1,6 @@
 const { db } = require("../../models/dbConnection"); // Import database connection
 const { User, RefreshToken } = db; // Import User and RefreshToken models
-const CustomError = require('../../utils/customErrorHandling')
+// const CustomError = require('../../utils/customErrorHandling')
 
 // Find a user by email
 module.exports.findUser = async (user) => {
