@@ -23,13 +23,13 @@ module.exports.loginUser = async (user) => {
       ); // User not found
     }
     if (!(await userDetails.validatePassword(user.password))) {
-      throw new CustomError("Incorrect password", 400); // Invalid password
+      throw new CustomError("Incorrect password", 401); // Invalid password
     }
 
     const userRole = await getUserRole(userDetails.uuid, user.role_name); // Get user role
 
     if (!userRole) {
-      throw new CustomError("User doesn't exist, With this role", 404); // User not found with this role
+      throw new CustomError("User doesn't exist, With this role", 400); // User not found with this role
     }
 
     const { accessToken, refreshToken, refreshTokenExpiresAt } =

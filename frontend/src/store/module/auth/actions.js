@@ -123,7 +123,6 @@ export default {
         }
       );
 
-      console.log(res);
 
       context.commit("CLEAR_USER_DATA"); // Clear user data from store
 
@@ -152,7 +151,6 @@ export default {
           withCredentials: true,
         }
       );
-      console.log(response);
       const user = response.data.data.user;
       if (user) {
         commit("SET_USER", user);
