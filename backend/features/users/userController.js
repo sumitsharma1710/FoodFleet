@@ -1,7 +1,8 @@
 const { addOrUpdateUser, getUserDetails } = require("./userService"); // Import user service for adding or updating user
 const decryptPassword = require("../../utils/decryptPassword");
+const asyncErrorHandler = require('../../utils/asyncErrorHandling')
 
-module.exports.registerUser = async (req, res) => {
+module.exports.registerUser = asyncErrorHandler(async (req, res) => {
   try {
     // Destructure required fields from request body
     const {
@@ -88,9 +89,9 @@ module.exports.registerUser = async (req, res) => {
       message: error.message || "Sorry, Internal server error!",
     });
   }
-};
+});
 
-module.exports.getUser = async (req, res) => {
+module.exports.getUser = asyncErrorHandler(async (req, res) => {
   try {
     const { refreshToken } = req.cookies;
 
@@ -127,4 +128,4 @@ module.exports.getUser = async (req, res) => {
       message: error.message || "Sorry, Internal server error!",
     });
   }
-};
+});

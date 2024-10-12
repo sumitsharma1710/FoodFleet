@@ -7,6 +7,7 @@ const { findUserByEmail,
   updateRefreshToken, 
   findUserByResetToken } = require("./authRepository"); // Import user-related repository functions
 const { getUserRole } = require("./authRoleRepository"); // Import user role repository function
+const CustomError = require('../../utils/customErrorHandling')
 
 // Handle user login
 module.exports.loginUser = async (user) => {
@@ -14,16 +15,16 @@ module.exports.loginUser = async (user) => {
     const userDetails = await findUser(user); // Find user by credentials
 
     if (!userDetails) {
-      throw new Error("User doesn't exist with this email, Please sign up!"); // User not found
+      throw new CustomError("User doesn't exist with this email, Please sign up!", 404); // User not found
     }
     if (!(await userDetails.validatePassword(user.password))) {
-      throw new Error("Incorrect password"); // Invalid password
+      throw new CustomError("Incorrect password", 400); // Invalid password
     }
     
     const userRole = await getUserRole(userDetails.uuid, user.role_name); // Get user role
 
     if (!userRole) {
-      throw new Error("User doesn't exist, With this role"); // User not found with this role
+      throw new CustomError("User doesn't exist, With this role", 404); // User not found with this role
     }
 
     const { accessToken, refreshToken, refreshTokenExpiresAt } = await userDetails.generateAuthToken(
@@ -43,7 +44,7 @@ module.exports.loginUser = async (user) => {
     
     return { userDetails, accessToken, refreshToken, refreshTokenExpiresAt }; // Return user details and tokens
   } catch (error) {
-    throw new Error(error.message || "Unable to login user"); // Handle login errors
+    throw new CustomError(error.message || "DB Error : Server Side error", 500);
   }
 };
 
@@ -52,7 +53,7 @@ module.exports.logoutUser = async (refreshToken) => {
   try {
     await removeRefreshToken(refreshToken); // Remove refresh token from the database
   } catch (error) {
-    throw new Error("Unable to logout user"); // Handle logout errors
+    throw new CustomError(error.message || "DB Error : Server Side error", 500);
   }
 };
 
@@ -62,7 +63,7 @@ module.exports.forgotPasswordService = async (email) => {
     const user = await findUserByEmail(email); // Find user by email
     
     if (!user) {
-      throw new Error("No user found with this email address"); // User not found
+      throw new CustomError("No user found with this email address", 404); // User not found
     }
     
     // Generate password reset token
@@ -71,7 +72,7 @@ module.exports.forgotPasswordService = async (email) => {
     
     return resetToken; // Return the reset token
   } catch (error) {
-    throw new Error(error.message || "Unable to process forgot password request"); // Handle errors
+    throw new CustomError(error.message || "DB Error : Server Side error", 500);
   }
 };
 
@@ -98,6 +99,6 @@ module.exports.resetPasswordService = async (token, newPassword) => {
     
     return true; // Return success
   } catch (error) {
-    throw new Error(error.message || "Unable to reset password"); // Handle errors
+    throw new CustomError(error.message || "DB Error : Server Side error", 500);
   }
 };

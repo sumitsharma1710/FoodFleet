@@ -5,6 +5,8 @@ const cors = require('cors');
 const { checkConnection } = require("./models/dbConnection"); 
 const userApi = require("./features/users/userApi"); 
 const authApi = require("./features/auth/authApi"); 
+const globalErrorHandler = require('./utils/globalErrorHandling');
+const CustomError = require('./utils/customErrorHandling');
 
 // Creating an instance of the Express application
 const app = express();
@@ -21,13 +23,19 @@ app.use(cookieParser());
 // Middleware to parse JSON request bodies
 app.use(express.json());
 
+// Middleware for globally handling errors
+app.use(globalErrorHandler);
+
 // Registering API routes
 app.use(userApi);
 app.use(authApi);
 
-// Setting up a basic route for the root URL
 app.get("/", (req, res) => {
   res.send("Working on user authentication"); 
+});
+
+app.all("*", (req, res, next) => {
+  next(new CustomError(`Can't find the ${req.url} on the server!`, 404));
 });
 
 // Starting the server and listening on a specified port
