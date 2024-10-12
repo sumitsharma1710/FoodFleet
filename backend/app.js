@@ -23,8 +23,7 @@ app.use(cookieParser());
 // Middleware to parse JSON request bodies
 app.use(express.json());
 
-// Middleware for globally handling errors
-app.use(globalErrorHandler);
+
 
 // Registering API routes
 app.use(userApi);
@@ -37,6 +36,9 @@ app.get("/", (req, res) => {
 app.all("*", (req, res, next) => {
   next(new CustomError(`Can't find the ${req.url} on the server!`, 404));
 });
+
+// Middleware for globally handling errors
+app.use(globalErrorHandler);
 
 // Starting the server and listening on a specified port
 app.listen(process.env.PORT || 8010, (req, res) => {

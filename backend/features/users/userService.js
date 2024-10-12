@@ -15,7 +15,7 @@ module.exports.addOrUpdateUser = async (userDetails, role_name) => {
     }
     // Validate password strength
     if (validatePassword(userDetails.password).isValid !== true) {
-      throw new CustomError(validatePassword(userDetails.password), 400);
+      throw new CustomError(validatePassword(userDetails.password).message, 400);
     }
 
     // Check if user already exists by email and phone

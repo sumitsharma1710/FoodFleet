@@ -15,7 +15,7 @@ module.exports.addUserRole = async (userUuid, role_name) => {
   // Throw error if role does not exist
   if (!role) {
     throw new CustomError(
-      error.message || `Role with name ${role_name} not found`,
+      `Role with name ${role_name} not found`,
       500
     ); // Handle errors
   }
@@ -41,7 +41,7 @@ module.exports.checkExistingUserRole = async (userUuid, role_name) => {
   // Throw error if role does not exist
   if (!role) {
     throw new CustomError(
-      error.message || `DB Error : Role with name ${role_name} not found`,
+      `DB Error : Role with name ${role_name} not found`,
       500
     ); // Handle errors
   }

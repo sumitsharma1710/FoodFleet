@@ -62,8 +62,8 @@ module.exports.loginUser = async (user) => {
     }
 
     return { userDetails, accessToken, refreshToken, refreshTokenExpiresAt }; // Return user details and tokens
-  } catch (error) {
-    throw new CustomError(error.message || "DB Error : Server Side error", 500);
+  } catch (err) {
+    throw new CustomError(err.message || "DB Error : Server Side error", 500);
   }
 };
 

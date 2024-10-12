@@ -107,7 +107,6 @@ export default {
         }, 0);
           this.$router.replace("/dashboard");
         } catch (error) {
-          console.log(error)
           toast.error(error.response?.data?.message || "Login failed", {
             position: toast.POSITION.TOP_RIGHT,
             autoClose: 3000

@@ -13,7 +13,7 @@ module.exports.getUserRole = async (userId, role_name) => {
 
   if (!role) {
     throw new CustomError(
-      error.message || `DB Error : Role with name ${role_name} not found`,
+      `DB Error : Role with name ${role_name} not found`,
       500
     ); // Handle errors
   }

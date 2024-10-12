@@ -156,7 +156,6 @@ export default {
         commit("SET_USER", user);
       }
     } catch (error) {
-      // console.error("Error loading user:", error);
       commit("SET_ERROR", "Failed to load user data");
       commit("SET_INITIALIZED", false); // Reset if failed
     } finally {
