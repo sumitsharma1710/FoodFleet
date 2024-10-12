@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const { createUser, findUserByEmailOrPhone , findUserByEmailAndPhone , fetchUser} = require("./userRepository"); // Import user-related functions
+const { createUser, findUserByEmailOrPhone , findUserByEmailAndPhone } = require("./userRepository"); // Import user-related functions
 const { addUserRole, checkExistingUserRole } = require("./userRoleRepository"); // Import user role-related functions
 const validator = require("validator"); // Import validator library
 const validatePassword = require('../../utils/passwordValidator'); // Import password validation utility
@@ -11,11 +11,11 @@ module.exports.addOrUpdateUser = async (userDetails, role_name) => {
   try {
     // Validate email format
     if (!validator.isEmail(userDetails.email)) {
-      throw new Error("Please enter correct email address");
+      throw new CustomError("Please enter correct email address", 400);
     }
     // Validate password strength
     if (validatePassword(userDetails.password).isValid !== true) {
-      throw new Error(validatePassword(userDetails.password));
+      throw new CustomError(validatePassword(userDetails.password), 400);
     }
 
     // Check if user already exists by email and phone
@@ -56,22 +56,22 @@ module.exports.addOrUpdateUser = async (userDetails, role_name) => {
   }
 };
 
-module.exports.getUserDetails = async (token)=>{
-  try{
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+// module.exports.getUserDetails = async (token)=>{
+//   try{
+//     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-    if(!decoded && !decoded.uuid){
-      throw new Error("Unable to fetch user details");
-    }
-    else{
-      const user = await fetchUser(decoded.uuid);
-      if(!user){
-        throw new Error("user not found");
-      }
-      return user
-    }
+//     if(!decoded && !decoded.uuid){
+//       throw new CustomError("Unable to fetch user details", );
+//     }
+//     else{
+//       const user = await fetchUser(decoded.uuid);
+//       if(!user){
+//         throw new Error("user not found");
+//       }
+//       return user
+//     }
 
-  }catch(error){
-    throw new CustomError(error.message || "DB Error : Server Side error", 500)
-  }
-}
+//   }catch(error){
+//     throw new CustomError(error.message || "DB Error : Server Side error", 500)
+//   }
+// }
