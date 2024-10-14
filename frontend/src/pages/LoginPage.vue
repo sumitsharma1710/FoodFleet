@@ -1,12 +1,12 @@
-<template>
+<!-- <template>
   <div class="login-container">
-    <!-- Login form with email, password, role selection, and validation -->
+    //Login form with email, password, role selection, and validation
     <h2>Login</h2>
     <form @submit.prevent="loginHandler">
-      <!-- Email input field -->
+      //Email input field
       <input type="email" v-model.trim="email" placeholder="Email" required />
       
-      <!-- Password input field with validation on input -->
+      //Password input field with validation on input
       <input
         type="password"
         v-model.trim="password"
@@ -15,18 +15,7 @@
 
       />
 
-      <!-- Password requirements hint
-      <p class="password-requirements">
-        Password must contain a lowercase letter, an uppercase letter, a number,
-        a special character, and be at least 8 characters long.
-      </p> -->
-
-      <!-- Error message for invalid password -->
-      <!-- <p v-if="!isPasswordValid && password" class="error-message">
-        Invalid password
-      </p> -->
-
-      <!-- Role selection dropdown -->
+      //Role selection dropdown
       <select v-model="roleType" required>
         <option value="">Select Role</option>
         <option value="Admin">Admin</option>
@@ -35,23 +24,23 @@
         <option value="Delivery_Partner">Delivery Partner</option>
       </select>
 
-      <!-- Submit button, disabled if form is not valid -->
+      //Submit button, disabled if form is not valid
       <button type="submit" :disabled="!isFormValid">Login</button>
     </form>
 
-    <!-- Forgot password link -->
+    //Forgot password link
     <div class="forgot-password">
       <router-link to="/forgotPassword">Forgot Password?</router-link>
     </div>
 
-    <!-- Sign up link for new users -->
+    //Sign up link for new users
     <div class="new-user">
       <span>New User <router-link to="/signup">Sign Up</router-link></span>
     </div>
   </div>
-</template>
+</template> -->
 
-<script>
+<!-- <script>
 import { mapActions, mapState } from "vuex";
 import { toast } from 'vue3-toastify';
 
@@ -73,20 +62,6 @@ export default {
   },
   methods: {
     ...mapActions("auth", ["loginUser"]),
-    
-    // Validate password based on set criteria
-    // validatePassword() {
-    //   const { password } = this;
-
-    //   const minLength = password.length >= 8;
-    //   const hasUpperCase = /[A-Z]/.test(password);
-    //   const hasLowerCase = /[a-z]/.test(password);
-    //   const hasNumbers = /\d/.test(password);
-    //   const hasNonalphas = /\W/.test(password);
-
-    //   this.isPasswordValid =
-    //     minLength && hasUpperCase && hasLowerCase && hasNumbers && hasNonalphas;
-    // },
 
     // Handles login submission with validation and Vuex login action
     async loginHandler() {
@@ -116,9 +91,9 @@ export default {
     },
   },
 };
-</script>
+</script> -->
 
-<style scoped>
+<!-- <style scoped>
 body {
   font-family: Arial, sans-serif;
   display: flex;
@@ -201,4 +176,138 @@ select {
   border-radius: 4px;
   width: 100%;
 }
-</style>
+</style> -->
+
+<template>
+  <v-container fluid fill-height class="pa-0">
+    <v-row align="center" justify="center" no-gutters>
+      <v-col cols="12" sm="8" md="6" lg="4">
+        <v-card class="elevation-12">
+          <v-card-text class="pt-6">
+            <div class="text-h5 text-center mb-4">Login</div>
+            <v-form @submit.prevent="loginHandler" v-model="isFormValid" ref="form">
+              <v-text-field
+                v-model.trim="email"
+                label="Email"
+                type="email"
+                required
+                prepend-icon="mdi-email"
+                dense
+                :rules="[v => !!v || 'Email is required', v => /.+@.+\..+/.test(v) || 'Email must be valid']"
+              ></v-text-field>
+              
+              <v-text-field
+                v-model.trim="password"
+                label="Password"
+                :type="showPassword ? 'text' : 'password'"
+                required
+                prepend-icon="mdi-lock"
+                :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+                @click:append="showPassword = !showPassword"
+                dense
+                :rules="[v => !!v || 'Password is required']"
+              ></v-text-field>
+
+              <v-select
+                v-model="roleType"
+                :items="roles"
+                label="Select Role"
+                required
+                prepend-icon="mdi-account"
+                dense
+                :rules="[v => !!v || 'Role is required']"
+              ></v-select>
+
+              <v-btn
+                type="submit"
+                color="primary"
+                block
+                :disabled="!isFormValid"
+                :loading="loading"
+                class="mt-2"
+              >
+                Login
+              </v-btn>
+            </v-form>
+          </v-card-text>
+          
+          <v-card-actions class="pt-0 pb-2 px-4 justify-end">
+            <v-btn text small color="primary" to="/forgotPassword">
+              Forgot Password?
+            </v-btn>
+          </v-card-actions>
+          
+          <v-card-text class="text-center pt-0 pb-4">
+            New User? 
+            <v-btn text small color="primary" to="/signup">
+              Sign Up
+            </v-btn>
+          </v-card-text>
+        </v-card>
+      </v-col>
+    </v-row>
+  </v-container>
+</template>
+
+<script>
+import { mapActions, mapState } from "vuex";
+import { toast } from 'vue3-toastify';
+
+export default {
+  data() {
+    return {
+      email: "",
+      password: "",
+      roleType: "",
+      showPassword: false,
+      isFormValid: false,
+      roles: [
+        'Admin',
+        'Customer',
+        'Restaurant Owner',
+        'Delivery Partner'
+      ],
+    };
+  },
+  computed: {
+    ...mapState("auth", ["loading", "error"]),
+  },
+  methods: {
+    ...mapActions("auth", ["loginUser"]),
+
+    async loginHandler() {
+      if (this.$refs.form.validate()) {
+        try {
+          await this.loginUser({
+            email: this.email,
+            password: this.password,
+            role_name: this.getRoleValue(this.roleType),
+          });
+          this.$store.dispatch("auth/loadUserFromDB");
+          setTimeout(() => {
+            toast.success("Logged in successfully", {
+              position: toast.POSITION.TOP_RIGHT,
+              autoClose: 1000
+            });
+          }, 0);
+          this.$router.replace("/dashboard");
+        } catch (error) {
+          toast.error(error.response?.data?.message || "Login failed", {
+            position: toast.POSITION.TOP_RIGHT,
+            autoClose: 3000
+          });
+        }
+      }
+    },
+    getRoleValue(role) {
+      const roleMap = {
+        'Admin': 'Admin',
+        'Customer': 'Customer',
+        'Restaurant Owner': 'Restaurant_Owner',
+        'Delivery Partner': 'Delivery_Partner'
+      };
+      return roleMap[role] || role;
+    }
+  },
+};
+</script>

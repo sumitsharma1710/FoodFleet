@@ -1,32 +1,32 @@
-<template>
+<!-- <template>
   <div class="login-container">
     <h2>Forgot Password</h2>
-    <!-- Form to handle forgot password submission -->
+    //Form to handle forgot password submission
     <form @submit.prevent="handleForgotPassword">
-      <!-- Input field for email -->
+      //Input field for email
       <input 
         type="email" 
         v-model="email" 
         placeholder="Email" 
         required 
       />
-      <!-- Instructional message for the user -->
+      //Instructional message for the user
       <p class="email-requirements">
         Enter the email to get the reset password link
       </p>
-      <!-- Submit button, disabled if no email or loading -->
+      //Submit button, disabled if no email or loading
       <button type="submit" :disabled="!email || loading">
         {{ loading ? 'Sending...' : 'Reset Password' }}
       </button>
     </form>
-    <!-- Link to log in if password reset is successful -->
+    //Link to log in if password reset is successful
     <div v-if="resetSuccess" class="signin-link">
       <router-link to="/login">Log In</router-link>
     </div>
   </div>
-</template>
+</template> -->
 
-<script>
+<!-- <script>
 import { mapActions, mapState } from 'vuex';
 import { toast } from 'vue3-toastify';
 
@@ -70,9 +70,9 @@ export default {
     }
   }
 };
-</script>
+</script> -->
 
-<style scoped>
+<!-- <style scoped>
 body {
   font-family: Arial, sans-serif;
   display: flex;
@@ -143,4 +143,96 @@ button:disabled {
   margin-top: 15px;
   text-align: center;
 }
-</style>
+</style> -->
+
+
+<template>
+  <v-container class="fill-height" fluid>
+    <v-row align="center" justify="center">
+      <v-col cols="12" sm="8" md="6" lg="4">
+        <v-card class="elevation-12">
+          <v-card-title class="text-center text-h5 py-4">
+            Forgot Password
+          </v-card-title>
+          <v-card-text>
+            <v-form @submit.prevent="handleForgotPassword">
+              <v-text-field
+                v-model="email"
+                label="Email"
+                type="email"
+                required
+                prepend-icon="mdi-email"
+              ></v-text-field>
+              <v-card-text class="text-caption text-grey">
+                Enter the email to get the reset password link
+              </v-card-text>
+              <v-btn
+                type="submit"
+                color="primary"
+                block
+                :loading="loading"
+                :disabled="!email || loading"
+                class="mt-2"
+              >
+                {{ loading ? 'Sending...' : 'Reset Password' }}
+              </v-btn>
+            </v-form>
+          </v-card-text>
+          <v-card-actions v-if="resetSuccess">
+            <v-btn
+              color="primary"
+              text
+              block
+              to="/login"
+            >
+              Log In
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-col>
+    </v-row>
+  </v-container>
+</template>
+
+<script>
+import { mapActions, mapState } from 'vuex';
+import { toast } from 'vue3-toastify';
+
+export default {
+  data() {
+    return {
+      email: '',
+      resetSuccess: false
+    };
+  },
+  computed: {
+    ...mapState('auth', ['loading'])
+  },
+  methods: {
+    ...mapActions('auth', ['forgotPassword']),
+    
+    async handleForgotPassword() {
+      try {
+        const response = await this.forgotPassword(this.email);
+        if (response.status === 'Success') {
+          toast.success('Reset password link sent to your email.', {
+            position: toast.POSITION.TOP_RIGHT,
+            autoClose: 3000
+          });
+          this.resetSuccess = true;
+        } else {
+          toast.error('An error occurred. Please try again.', {
+            position: toast.POSITION.TOP_RIGHT,
+            autoClose: 3000
+          });
+        }
+      } catch (error) {
+        toast.error(error || 'An error occurred. Please try again.', {
+          position: toast.POSITION.TOP_RIGHT,
+          autoClose: 3000
+        });
+      }
+    }
+  }
+};
+</script>
