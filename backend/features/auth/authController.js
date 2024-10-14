@@ -99,7 +99,7 @@ module.exports.forgotPassword = asyncErrorHandler(async (req, res) => {
   const options = {
     to: email,
     subject: "Reset Password",
-    link: `http://localhost:8080/user/v1/resetPassword/${resetToken}`, // Reset link
+    link: `http://192.1.200.39:8080/user/v1/resetPassword/${resetToken}`, // Reset link
   };
   await sendMail(options); // Send reset email
   return res.status(200).json({

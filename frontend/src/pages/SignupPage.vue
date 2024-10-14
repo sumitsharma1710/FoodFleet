@@ -570,10 +570,8 @@ export default {
     <v-row justify="center">
       <v-col cols="12" sm="8" md="6">
         <v-card class="elevation-12">
-          <v-card-title class="text-center">
-            <h2>Sign Up</h2>
-          </v-card-title>
-          <v-card-text>
+          <v-card-text class="pt-6">
+            <div class="text-h5 text-center mb-4">Sign Up</div>
             <v-form ref="form" v-model="isFormValid" lazy-validation>
               <v-text-field
                 v-model="firstName"
@@ -615,7 +613,7 @@ export default {
                 v-model="password"
                 :rules="passwordRules"
                 label="Password*"
-                :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+                :append-inner-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
                 :type="showPassword ? 'text' : 'password'"
                 @click:append="showPassword = !showPassword"
                 required
@@ -631,7 +629,7 @@ export default {
                   <v-text-field
                     v-model="formattedDate"
                     label="Date of Birth*"
-                    prepend-icon="mdi-calendar"
+                    prepend-inner-icon="mdi-calendar"
                     readonly
                     v-bind="props"
                     :rules="dobRules"
@@ -748,7 +746,7 @@ export default {
     emailRules() {
       return [
         (v) => !!v || "Email is required",
-        (v) => /.+@.+\..+/.test(v) || "Email must be valid",
+        (v) => /^[a-z0-9._-]+@[a-z0-9.-]+\.[a-z]{2,}$/.test(v) || "Email must be valid",
       ];
     },
     passwordRules() {
@@ -821,14 +819,20 @@ export default {
           await this.$store.dispatch("auth/loadUserFromDB");
 
           toast.success("Signed up successfully, Thank you!", {
-            position: toast.POSITION.TOP_RIGHT,
-            autoClose: 1000,
+            autoClose: 1500,
+            pauseOnHover: true,
+            position: "top-right",
+            hideProgressBar: true,
+            theme: "colored",
           });
           setTimeout(() => this.$router.replace("/dashboard"), 2000);
         } catch (error) {
           toast.error(error.response?.data?.message || "Login failed", {
-            position: toast.POSITION.TOP_RIGHT,
             autoClose: 3000,
+            pauseOnHover: true,
+            position: "top-right",
+            hideProgressBar: true,
+            theme: "colored",
           });
         }
       }

@@ -162,7 +162,12 @@ button:disabled {
                 type="email"
                 required
                 prepend-icon="mdi-email"
-                :rules="[v => !!v || 'Email is required', v => /.+@.+\..+/.test(v) || 'Email must be valid']"
+                :rules="[
+                  (v) => !!v || 'Email is required',
+                  (v) =>
+                    /^[a-z0-9._-]+@[a-z0-9.-]+\.[a-z]{2,}$/.test(v) ||
+                    'Email must be valid',
+                ]"
               ></v-text-field>
               <v-card-text class="text-caption text-grey">
                 Enter the email to get the reset password link
@@ -175,19 +180,12 @@ button:disabled {
                 :disabled="!email || loading"
                 class="mt-2"
               >
-                {{ loading ? 'Sending...' : 'Reset Password' }}
+                {{ loading ? "Sending..." : "Reset Password" }}
               </v-btn>
             </v-form>
           </v-card-text>
           <v-card-actions v-if="resetSuccess">
-            <v-btn
-              color="primary"
-              text
-              block
-              to="/login"
-            >
-              Log In
-            </v-btn>
+            <v-btn color="primary" text block to="/login"> Log In </v-btn>
           </v-card-actions>
         </v-card>
       </v-col>
@@ -196,44 +194,53 @@ button:disabled {
 </template>
 
 <script>
-import { mapActions, mapState } from 'vuex';
-import { toast } from 'vue3-toastify';
+import { mapActions, mapState } from "vuex";
+import { toast } from "vue3-toastify";
 
 export default {
   data() {
     return {
-      email: '',
-      resetSuccess: false
+      email: "",
+      resetSuccess: false,
     };
   },
   computed: {
-    ...mapState('auth', ['loading'])
+    ...mapState("auth", ["loading"]),
   },
   methods: {
-    ...mapActions('auth', ['forgotPassword']),
-    
+    ...mapActions("auth", ["forgotPassword"]),
+
     async handleForgotPassword() {
       try {
         const response = await this.forgotPassword(this.email);
-        if (response.status === 'Success') {
-          toast.success('Reset password link sent to your email.', {
-            position: toast.POSITION.TOP_RIGHT,
-            autoClose: 3000
+        if (response.status === "Success") {
+          toast.success("Reset password link sent to your email.", {
+            autoClose: 3000,
+            pauseOnHover: true,
+            position: "top-right",
+            hideProgressBar: true,
+            theme: "colored",
           });
           this.resetSuccess = true;
         } else {
-          toast.error('An error occurred. Please try again.', {
-            position: toast.POSITION.TOP_RIGHT,
-            autoClose: 3000
+          toast.error("An error occurred. Please try again.", {
+            autoClose: 3000,
+            pauseOnHover: true,
+            position: "top-right",
+            hideProgressBar: true,
+            theme: "colored",
           });
         }
       } catch (error) {
-        toast.error(error || 'An error occurred. Please try again.', {
-          position: toast.POSITION.TOP_RIGHT,
-          autoClose: 3000
+        toast.error(error || "An error occurred. Please try again.", {
+          autoClose: 3000,
+          pauseOnHover: true,
+          position: "top-right",
+          hideProgressBar: true,
+          theme: "colored",
         });
       }
-    }
-  }
+    },
+  },
 };
 </script>

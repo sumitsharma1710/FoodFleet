@@ -93,7 +93,12 @@ nav {
 <template>
   <v-app-bar color="#ff6b6b" prominent>
     <v-app-bar-title>
-      <router-link to="/" replace class="text-white text-decoration-none text-h5 font-weight-medium">FoodFleet</router-link>
+      <router-link
+        to="/"
+        replace
+        class="text-white text-decoration-none text-h5 font-weight-medium"
+        >FoodFleet</router-link
+      >
     </v-app-bar-title>
 
     <v-spacer></v-spacer>
@@ -102,50 +107,49 @@ nav {
       <!-- <v-btn text class="text-white">
         Welcome, {{ userFullName }}
       </v-btn> -->
-      <v-btn text @click="logout" class="text-white">
-        Logout
-      </v-btn>
+      <v-btn text @click="logout" class="text-white"> Logout </v-btn>
     </template>
     <template v-else>
-      <v-btn text to="/login" class="text-white">
-        Login
-      </v-btn>
-      <v-btn text to="/signup" class="text-white">
-        Signup
-      </v-btn>
+      <v-btn text to="/login" class="text-white"> Login </v-btn>
+      <v-btn text to="/signup" class="text-white"> Signup </v-btn>
     </template>
   </v-app-bar>
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex';
-import { toast } from 'vue3-toastify';
+import { mapGetters, mapActions } from "vuex";
+import { toast } from "vue3-toastify";
 
 export default {
   computed: {
-    ...mapGetters('auth', ['isAuthenticated'])
+    ...mapGetters("auth", ["isAuthenticated"]),
   },
   methods: {
-    ...mapActions('auth', ['logoutUser']),
+    ...mapActions("auth", ["logoutUser"]),
     async logout() {
       try {
         await this.logoutUser();
 
         setTimeout(() => {
           toast.success("Logged out successfully", {
-            position: toast.POSITION.TOP_RIGHT,
-            autoClose: 1000
+            autoClose: 1500,
+            pauseOnHover: true,
+            position: "top-right",
+            hideProgressBar: true,
+            theme: "colored",
           });
         }, 100);
-        this.$router.replace('/');
-
+        this.$router.replace("/");
       } catch (error) {
         toast.error(error.message || "Logout failed. Please try again.", {
-          position: toast.POSITION.TOP_RIGHT,
-          autoClose: 5000
+            autoClose: 3000,
+            pauseOnHover: true,
+            position: "top-right",
+            hideProgressBar: true,
+            theme: "colored",
         });
       }
-    }
-  }
+    },
+  },
 };
 </script>

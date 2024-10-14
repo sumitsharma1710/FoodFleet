@@ -185,7 +185,11 @@ select {
         <v-card class="elevation-12">
           <v-card-text class="pt-6">
             <div class="text-h5 text-center mb-4">Login</div>
-            <v-form @submit.prevent="loginHandler" v-model="isFormValid" ref="form">
+            <v-form
+              @submit.prevent="loginHandler"
+              v-model="isFormValid"
+              ref="form"
+            >
               <v-text-field
                 v-model.trim="email"
                 label="Email"
@@ -193,9 +197,14 @@ select {
                 required
                 prepend-icon="mdi-email"
                 dense
-                :rules="[v => !!v || 'Email is required', v => /.+@.+\..+/.test(v) || 'Email must be valid']"
+                :rules="[
+                  (v) => !!v || 'Email is required',
+                  (v) =>
+                    /^[a-z0-9._-]+@[a-z0-9.-]+\.[a-z]{2,}$/.test(v) ||
+                    'Email must be valid',
+                ]"
               ></v-text-field>
-              
+
               <v-text-field
                 v-model.trim="password"
                 label="Password"
@@ -205,7 +214,7 @@ select {
                 :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
                 @click:append="showPassword = !showPassword"
                 dense
-                :rules="[v => !!v || 'Password is required']"
+                :rules="[(v) => !!v || 'Password is required']"
               ></v-text-field>
 
               <v-select
@@ -215,7 +224,7 @@ select {
                 required
                 prepend-icon="mdi-account"
                 dense
-                :rules="[v => !!v || 'Role is required']"
+                :rules="[(v) => !!v || 'Role is required']"
               ></v-select>
 
               <v-btn
@@ -230,18 +239,16 @@ select {
               </v-btn>
             </v-form>
           </v-card-text>
-          
+
           <v-card-actions class="pt-0 pb-2 px-4 justify-end">
             <v-btn text small color="primary" to="/forgotPassword">
               Forgot Password?
             </v-btn>
           </v-card-actions>
-          
+
           <v-card-text class="text-center pt-0 pb-4">
-            New User? 
-            <v-btn text small color="primary" to="/signup">
-              Sign Up
-            </v-btn>
+            New User?
+            <v-btn text small color="primary" to="/signup"> Sign Up </v-btn>
           </v-card-text>
         </v-card>
       </v-col>
@@ -251,7 +258,7 @@ select {
 
 <script>
 import { mapActions, mapState } from "vuex";
-import { toast } from 'vue3-toastify';
+import { toast } from "vue3-toastify";
 
 export default {
   data() {
@@ -261,12 +268,7 @@ export default {
       roleType: "",
       showPassword: false,
       isFormValid: false,
-      roles: [
-        'Admin',
-        'Customer',
-        'Restaurant Owner',
-        'Delivery Partner'
-      ],
+      roles: ["Admin", "Customer", "Restaurant Owner", "Delivery Partner"],
     };
   },
   computed: {
@@ -286,28 +288,34 @@ export default {
           this.$store.dispatch("auth/loadUserFromDB");
           setTimeout(() => {
             toast.success("Logged in successfully", {
-              position: toast.POSITION.TOP_RIGHT,
-              autoClose: 1000
+              autoClose: 1500,
+              pauseOnHover: true,
+              position: "top-right",
+              hideProgressBar: true,
+              theme: "colored",
             });
-          }, 0);
+          }, 100);
           this.$router.replace("/dashboard");
         } catch (error) {
           toast.error(error.response?.data?.message || "Login failed", {
-            position: toast.POSITION.TOP_RIGHT,
-            autoClose: 3000
+            autoClose: 3000,
+            pauseOnHover: true,
+            position: "top-right",
+            hideProgressBar: true,
+            theme: "colored",
           });
         }
       }
     },
     getRoleValue(role) {
       const roleMap = {
-        'Admin': 'Admin',
-        'Customer': 'Customer',
-        'Restaurant Owner': 'Restaurant_Owner',
-        'Delivery Partner': 'Delivery_Partner'
+        Admin: "Admin",
+        Customer: "Customer",
+        "Restaurant Owner": "Restaurant_Owner",
+        "Delivery Partner": "Delivery_Partner",
       };
       return roleMap[role] || role;
-    }
+    },
   },
 };
 </script>
