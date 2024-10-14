@@ -28,12 +28,10 @@ router.beforeEach(async (to, from, next) => {
       await store.dispatch('auth/loadUserFromDB');
     }
   
-    if (to.matched.some(record => record.meta.requiresAuth)) {
-      if (store.state.auth.user) {
-        next();
-      } else {
-        next('/login');
-      }
+    if (store.state.auth.initialized && !to.meta.auth) {
+      return next("/dashboard");
+    } else if (!store.state.auth.initialized && to.meta.auth) {
+      return next("/login");
     } else {
       next();
     }

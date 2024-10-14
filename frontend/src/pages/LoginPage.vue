@@ -179,7 +179,7 @@ select {
 </style> -->
 
 <template>
-  <v-container fluid fill-height class="pa-0">
+  <v-container fluid fill-height class="pa-10">
     <v-row align="center" justify="center" no-gutters>
       <v-col cols="12" sm="8" md="6" lg="4">
         <v-card class="elevation-12">

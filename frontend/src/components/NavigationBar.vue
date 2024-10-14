@@ -93,15 +93,15 @@ nav {
 <template>
   <v-app-bar color="#ff6b6b" prominent>
     <v-app-bar-title>
-      <router-link to="/" class="text-white text-decoration-none text-h5 font-weight-medium">FoodFleet</router-link>
+      <router-link to="/" replace class="text-white text-decoration-none text-h5 font-weight-medium">FoodFleet</router-link>
     </v-app-bar-title>
 
     <v-spacer></v-spacer>
 
     <template v-if="isAuthenticated">
-      <v-btn text class="text-white">
+      <!-- <v-btn text class="text-white">
         Welcome, {{ userFullName }}
-      </v-btn>
+      </v-btn> -->
       <v-btn text @click="logout" class="text-white">
         Logout
       </v-btn>
@@ -123,7 +123,7 @@ import { toast } from 'vue3-toastify';
 
 export default {
   computed: {
-    ...mapGetters('auth', ['isAuthenticated', 'userFullName'])
+    ...mapGetters('auth', ['isAuthenticated'])
   },
   methods: {
     ...mapActions('auth', ['logoutUser']),

@@ -1,8 +1,8 @@
 <template>
-  <div class="dashboard">
-    <!-- Displays the user's full name from the store -->
-    <h1>Welcome, {{ userFullName }}!</h1>
-  </div>
+  <v-container class="dashboard">
+    <!-- Displays the user's full name from the store using Vuetify's typography component -->
+    <p class="text-h3">Welcome, {{ userFullName }}!</p>
+  </v-container>
 </template>
 
 <script>
@@ -13,9 +13,8 @@ export default {
     // Maps the getter for the user's full name from the 'auth' store
     ...mapGetters('auth', ['userFullName'])
   }
-  // methods: {
-  //   // Maps the action to load the user data from storage
-  //   ...mapActions('auth', ['loadUserFromDB'])
-  // }
 }
 </script>
+
+<style scoped>
+</style>

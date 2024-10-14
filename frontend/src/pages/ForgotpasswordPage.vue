@@ -162,6 +162,7 @@ button:disabled {
                 type="email"
                 required
                 prepend-icon="mdi-email"
+                :rules="[v => !!v || 'Email is required', v => /.+@.+\..+/.test(v) || 'Email must be valid']"
               ></v-text-field>
               <v-card-text class="text-caption text-grey">
                 Enter the email to get the reset password link
