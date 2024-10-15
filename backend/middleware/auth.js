@@ -6,9 +6,40 @@ const User = db.User;
 
 const authMiddleware = async (req, res, next) => {
   const { refreshToken } = req.cookies;
+  const { accessToken } = req.cookies;
 
   if (!refreshToken) {
-    return res.status(401).json({ message: "No token, authorization denied" });
+    if (accessToken) {
+      res.clearCookie("accessToken", {
+        httpOnly: true,
+        // secure: true,
+        // sameSite: "None"
+      });
+    }
+    return res.status(401).json({
+      status: "Fail",
+      message: "Your session has expired please login again",
+    });
+  }
+
+  if (!accessToken && refreshToken) {
+    const decoded = jwt.verify(refreshToken, process.env.JWT_SECRET);
+
+    const accessToken = jwt.sign(
+      { uuid: decoded.uuid, role_uuid: decoded.role_uuid },
+      process.env.JWT_SECRET,
+      { expiresIn: parseInt(process.env.ACCESS_TOKEN_EXP) }
+    );
+
+    const accessTokenExp = parseInt(process.env.ACCESS_TOKEN_EXP); // Access token expiration time
+
+    // Set access token cookie
+    res.cookie("accessToken", accessToken, {
+      httpOnly: true,
+      // secure: true,
+      // sameSite: "None",
+      maxAge: accessTokenExp, // Cookie expiration
+    });
   }
 
   try {

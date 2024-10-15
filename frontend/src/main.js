@@ -22,7 +22,4 @@ app.use(Vue3Toastify, {
 
 app.use(vuetify); // Add Vuetify
 
-// store.dispatch("auth/loadUserFromDB").finally(() => {
-//   app.mount("#app");
-// });
 app.mount("#app"); // Mount app

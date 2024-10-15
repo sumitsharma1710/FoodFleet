@@ -92,12 +92,6 @@ export default {
       }); // Commit user data to store
 
       context.commit("SET_INITIALIZED",true);
-      // if (response.data.data.accessToken) {
-      //   context.commit('SET_ACCESSTOKEN', response.data.data.accessToken); // Commit access token
-      // }
-      // if (response.data.data.refreshToken) {
-      //   context.commit('SET_REFRESHTOKEN', response.data.data.refreshToken); // Commit refresh token
-      // }
 
       return response.data; // Return response data
     } catch (error) {
@@ -128,9 +122,10 @@ export default {
 
       return { success: true }; // Return success response
     } catch (error) {
-      console.error("Logout failed:", error); // Log logout error
-      throw error; // Rethrow the error
+      const err = error;
+      throw err; // Rethrow the error
     } finally {
+      context.commit("CLEAR_USER_DATA");
       context.commit("SET_LOADING", false); // Reset loading state
     }
   },
@@ -195,14 +190,17 @@ export default {
       context.commit("SET_LOADING", true); // Set loading state
       context.commit("SET_ERROR", null); // Clear previous errors
 
+      const encryptedPassword = encryptPassword(password);
+
       // Make POST request to reset password
       const response = await axios.post(
         `http://192.1.200.39:8000/user/v1/resetPassword/${token}`,
-        { password }
+        { encryptedPassword }
       );
 
       return response.data; // Return response data
     } catch (error) {
+      console.log(error);
       if (error.response) {
         throw new Error(error.response.data.message || "Server error occurred"); // Handle server response error
       } else if (error.request) {

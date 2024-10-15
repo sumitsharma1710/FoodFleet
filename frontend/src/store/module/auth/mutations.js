@@ -21,8 +21,6 @@ export default {
   // Clear all user-related data from state and storage
   CLEAR_USER_DATA(state) {
     state.user = null; // Clear user data
-    state.accesstoken = null; // Clear access token;
-    state.refreshtoken = null; // Clear refresh token
     state.error = null; // Clear error message
     state.initialized = false;
   }

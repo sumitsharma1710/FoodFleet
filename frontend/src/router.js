@@ -18,7 +18,7 @@ const router = createRouter({
         {path: '/forgotPassword', component: Forgotpassword, meta: {auth : false}},
         {path: '/signup', component: SignUp, meta: {auth : false}},
         {path: '/dashboard', component: Dashboard , meta: {auth : true}},
-        {path: '/user/v1/resetPassword/:token', component: ResetPassword},
+        {path: '/user/v1/resetPassword/:token', component: ResetPassword, meta: {auth : false}},
         {path:'/:notFound(.*)', component: NotFound}
     ]
 });
@@ -27,11 +27,21 @@ router.beforeEach(async (to, from, next) => {
     if (!store.state.auth.initialized) {
       await store.dispatch('auth/loadUserFromDB');
     }
+    const notAllowedPath = [
+      "/login",
+      "/signup",
+      "/forgotPassword"
+    ];
   
-    if (store.state.auth.initialized && !to.meta.auth) {
-      return next("/dashboard");
-    } else if (!store.state.auth.initialized && to.meta.auth) {
-      return next("/login");
+    if (!to.meta.auth && store.state.auth.initialized) {
+      if(notAllowedPath.includes(to.path)){
+        next("/dashboard");
+      }
+      else{
+        next();
+      }
+    } else if (to.meta.auth &&!store.state.auth.initialized) {
+      next("/login");
     } else {
       next();
     }

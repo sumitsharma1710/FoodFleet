@@ -63,13 +63,6 @@ module.exports.loginUser = asyncErrorHandler(async (req, res) => {
 module.exports.logoutUser = asyncErrorHandler(async (req, res) => {
   const refreshToken = req.cookies.refreshToken; // Get refresh token from cookies
 
-  if (!refreshToken) {
-    return res.status(400).json({
-      status: "Fail",
-      message: "No refresh token provided", // Error if no token is found
-    });
-  }
-
   await logoutUser(refreshToken); // Logout user
 
   // Clear cookies
@@ -112,9 +105,14 @@ module.exports.forgotPassword = asyncErrorHandler(async (req, res) => {
 // Handle password reset
 module.exports.resetPassword = asyncErrorHandler(async (req, res) => {
   const { token } = req.params; // Get token from URL parameters
-  const { password } = req.body; // Get new password from request body
+  const { encryptedPassword } = req.body; // Get new password from request body
 
-  await resetPasswordService(token, password); // Reset user password
+  const privateKeyPem = process.env.PRIVATE_KEY_PEM; // Load your private key PEM from environment variables
+
+  // Decrypt the password using the utility
+  const decryptedPassword = decryptPassword(encryptedPassword, privateKeyPem);
+
+  await resetPasswordService(token, decryptedPassword); // Reset user password
 
   return res.status(200).json({
     status: "Success",

@@ -8,7 +8,7 @@ module.exports.createUser = async (user) => {
     return newUser;
 };
 
-// Function to find a user by email or phone number
+// Function to find a user by email and phone number
 module.exports.findUserByEmailAndPhone = async (email, phone) => {
     const user = await User.findOne({
       where: {
@@ -18,6 +18,7 @@ module.exports.findUserByEmailAndPhone = async (email, phone) => {
     return user; // Return found user
 };
 
+// Function to find a user by email or phone number
 module.exports.findUserByEmailOrPhone = async (email, phone) => {
     const user = await User.findOne({
       where: {
@@ -26,13 +27,3 @@ module.exports.findUserByEmailOrPhone = async (email, phone) => {
     });
     return user; // Return found user
 };
-
-
-// module.exports.fetchUser = async(userUuid)=>{
-//     const user = await User.findOne({
-//       where: {
-//         uuid : userUuid
-//       }
-//     });
-//     return user; // Return found user
-// }
