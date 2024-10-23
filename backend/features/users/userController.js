@@ -34,7 +34,7 @@ module.exports.registerUser = asyncErrorHandler(async (req, res) => {
   const privateKeyPem = process.env.PRIVATE_KEY_PEM; // Load your private key PEM from environment variables
 
   // Decrypt the password using the utility
-  const decryptedPassword = decryptPassword(password, privateKeyPem);
+  const decryptedPassword = decryptPassword(password);
 
   // Attempt to add or update user
   const { user, isNewUser, isNewRole } = await addOrUpdateUser(

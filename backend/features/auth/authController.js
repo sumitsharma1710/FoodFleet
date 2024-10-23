@@ -16,7 +16,7 @@ module.exports.loginUser = asyncErrorHandler(async (req, res) => {
   const privateKeyPem = process.env.PRIVATE_KEY_PEM; // Load your private key PEM from environment variables
 
   // Decrypt the password using the utility
-  const decryptedPassword = decryptPassword(password, privateKeyPem);
+  const decryptedPassword = decryptPassword(password);
 
   // Now use decryptedPassword in the login service
   const { userDetails, accessToken, refreshToken } = await loginUser({
@@ -110,7 +110,7 @@ module.exports.resetPassword = asyncErrorHandler(async (req, res) => {
   const privateKeyPem = process.env.PRIVATE_KEY_PEM; // Load your private key PEM from environment variables
 
   // Decrypt the password using the utility
-  const decryptedPassword = decryptPassword(encryptedPassword, privateKeyPem);
+  const decryptedPassword = decryptPassword(encryptedPassword);
 
   await resetPasswordService(token, decryptedPassword); // Reset user password
 
